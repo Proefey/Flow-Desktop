@@ -7,22 +7,26 @@ const UserSchema = new mongoose.Schema(
             required: true,
             trim: true
         },
-        taskList: {
-            type: mongoose.Types.ObjectId,
-            required: true
-        },
         username: {
             type: String,
             required: true,
             trim: true
         },
-        hashedPassword: {
+        password: {
             type: String,
             required: true,
             trim: false
-        }
+        },
+        machineID: [{
+            required: true,
+            type: Number
+        }],
+        machineName: [{
+            required: true,
+            type: String
+        }],
     },
-    { collection: "user_list" }
+    { collection: "users" }
 );
 
 const User = mongoose.model("User", UserSchema);

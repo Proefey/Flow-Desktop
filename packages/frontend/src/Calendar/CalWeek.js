@@ -9,22 +9,9 @@ import axios from 'axios';
 
 const port = 5000;
 
-async function fetchAll() {
-  try {
-    const response = await axios.get('http://localhost:' + port + '/data', {
-      params: {
-        id: 1,
-      },
-    });
-    return response.data.datapack;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
 const CalWeek = props => {
 
+  const addHeader = props.addHeader;
   //HELPER FUNCTIONS
   //Increases (And decreases) the week
   function IncreaseWeek(num){
@@ -45,13 +32,21 @@ const CalWeek = props => {
     d1.getDate() === d2.getDate();
   }
 
-  useEffect(() => {
-    fetchAll().then(result => {
-      if (result) {
-        setData(result);
-      }
-    });
-  }, []);
+    useEffect(() => {
+        function fetchData() {
+            const promise = fetch(`http://localhost:5000/data/2`, {
+                headers: addHeader()
+            });
+            return promise;
+        }
+        fetchData()
+            .then((res) => res.json())
+            .then((json) => setData(json["data"]))
+            .catch((error) => {
+                console.log(error);
+                setData(null); // To indicate API call failed
+            });
+    }, [addHeader]);
 
   //Constants
   const [data, setData] = useState([]);
@@ -117,25 +112,27 @@ const CalWeek = props => {
 
 
   var chartarr = new Array();
-  for(var i = 0; i < 7; i++){
-      var newPC = null;
-      var newWP = null;
-      for(var j = 0; j < data.length; j++){
-        var newtime = data[j]['timestamp'];
-        var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
-        console.info(startDate);
-        if(sameDay(datearr[i], startDate)){
-          var newdata = data[j];
-          newPC = newdata['power'];
-          newWP = newdata['waterproduced'];
+  if(data != null){
+    for(var i = 0; i < 7; i++){
+        var newPC = null;
+        var newWP = null;
+        for(var j = 0; j < data.length; j++){
+          var newtime = data[j]['timestamp'];
+          var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
+          console.info(startDate);
+          if(sameDay(datearr[i], startDate)){
+            var newdata = data[j];
+            newPC = newdata['power'];
+            newWP = newdata['waterproduced'];
+          }
         }
-      }
-    var chartdata = {};
-    chartdata["weekday"] = weekdays[i];
-    chartdata["powerConsumption"] = newPC;
-    chartdata["waterProduction"]= newWP;
-    
-    chartarr.push(chartdata);
+      var chartdata = {};
+      chartdata["weekday"] = weekdays[i];
+      chartdata["powerConsumption"] = newPC;
+      chartdata["waterProduction"]= newWP;
+      
+      chartarr.push(chartdata);
+    }
   }
 
   return (

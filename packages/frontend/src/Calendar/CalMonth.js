@@ -9,27 +9,15 @@ import Triangle from "@react-native-toolkit/triangle";
 
 const port = 5000;
 
-async function fetchAll() {
-  try {
-    const response = await axios.get('http://localhost:' + port + '/data', {
-      params: {
-        id: 1,
-      },
-    });
-    return response.data.datapack;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
 
 
 //Add events by using the events0, events1, and events2 arrays
 //Add colors to events by using the respective eventcolors arrays
 //Arrays are assumed to be in the same order
 const CalMonth = props => {
-
+  const target = props.Target;
+  const addHeader = props.addHeader;
+  console.info("Target: " + target);
   /* HELPER FUNCTIONS */
   //Increases or Decreases The Selected Month
   function IncreaseMonth(left){
@@ -69,21 +57,23 @@ const CalMonth = props => {
     var newWP = 0;
     var newWL = 0;
     var newdata = null;
-    for(var i = 0; i < data.length; i++){
-      var newtime = data[i]['timestamp'];
-      var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
-      
-      if(sameDay(d, startDate)){
-
-        newdata = data[i];
-        newH = newdata['humidity'];
-        newPC = newdata['power'];
-        newTDS = newdata['tds'];
-        newAT = newdata['temp'];
-        newWP = newdata['waterproduced'];
-        newWL = newdata['waterlevel'];
+    console.info(data);
+    if(data != null){
+      for(var i = 0; i < data.length; i++){
+        var newtime = data[i]['timestamp'];
+        var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
+        console.info(startDate);
+        if(sameDay(d, startDate)){
+          newdata = data[i];
+          newH = newdata['humidity'];
+          newPC = newdata['power'];
+          newTDS = newdata['tds'];
+          newAT = newdata['temp'];
+          newWP = newdata['waterproduced'];
+          newWL = newdata['waterlevel'];
+        }
+        
       }
-      
     }
     /*
     newH = Math.random(1) * 100;
@@ -101,13 +91,21 @@ const CalMonth = props => {
     setWL(newWL);
   }
 
-  useEffect(() => {
-    fetchAll().then(result => {
-      if (result) {
-        setData(result);
-      }
-    });
-  }, []);
+    useEffect(() => {
+        function fetchData() {
+            const promise = fetch(`http://localhost:5000/data/` + target, {
+                headers: addHeader()
+            });
+            return promise;
+        }
+        fetchData()
+            .then((res) => res.json())
+            .then((json) => setData(json["data"]))
+            .catch((error) => {
+                console.log(error);
+                setData(null); // To indicate API call failed
+            });
+    }, [target, addHeader]);
 
   //Constants
   const [data, setData] = useState([]);
@@ -192,156 +190,24 @@ const CalMonth = props => {
 
   const [view, setView] = useState(false);
 
-  for(var i = 0; i < data.length; i++){
-      var newtime = data[i]['timestamp'];
-      var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
-      for(var j = 0; j < 42; j++){
-        if(sameDay(displaydays[j], startDate)){
-          hasdata[j] = true;
-          WParray[j] = data[i]['waterproduced'];
-          PCarray[j] = data[i]['power'];
-          break;
+  if(data != null){
+    for(var i = 0; i < data.length; i++){
+        var newtime = data[i]['timestamp'];
+        var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
+        for(var j = 0; j < 42; j++){
+          if(sameDay(displaydays[j], startDate)){
+            hasdata[j] = true;
+            WParray[j] = data[i]['waterproduced'];
+            PCarray[j] = data[i]['power'];
+            break;
+          }
         }
-      }
+    }
   }
-
-  console.info(hasdata);
 
   return (
     <div className="Main">
     <style>{'body { background-color: #000000; }'}</style> 
-      <div
-      style = {{
-        transform: `translate(${0}px, ${10}px)`,
-        position:'absolute',
-        background: Colors.fblue,
-        opacity: 0.5,
-        width: topwidth,
-        height: topheight - 20,
-        border: 'none',
-      }}
-
-      />
-
-      <div
-      style = {{
-        transform: 'translate(${0}px, ${0}px)',
-        position:'absolute',
-        opacity: 1,
-        width: topwidth,
-        height: topheight,
-        border: 'none',
-        borderBottom: 'solid',
-        borderTop: 'solid',
-        borderColor: Colors.flightblue,
-      }}
-      />
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 - 260}px, ${2.5}px)`
-      }}>
-        <Triangle mode={"left"} base={topheight - 5} color={"black"}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 - 250}px, ${0}px)`
-      }}>
-        <Triangle mode={"left"} base={topheight} color={Colors.flightblue}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 - 240}px, ${0}px)`
-      }}>
-        <Triangle mode={"left"} base={topheight} color={"black"}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 + 160}px, ${2.5}px)`
-      }}>
-        <Triangle mode={"right"} base={topheight - 5} color={"black"}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 + 150}px, ${0}px)`
-      }}>
-        <Triangle mode={"right"} base={topheight} color={Colors.flightblue}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 + 140}px, ${0}px)`
-      }}>
-        <Triangle mode={"right"} base={topheight} color={"black"}/>
-      </div>
-
-      <div
-      style = {{
-        transform: `translate(${topwidth / 2 - 150}px, ${0}px)`,
-        position:'absolute',
-        backgroundColor: 'black',
-        opacity: 1,
-        width: 300,
-        height: topheight,
-      }}
-      >
-      <p 
-      align = 'justify'
-      align = 'center'
-      style = {{
-        fontSize: 40,
-        fontWeight: 'bold',
-        color: Colors.flightblue,
-      }}>
-      {months[date.getMonth()]} {date.getDate()} <br/> {date.getFullYear()}
-      </p>
-      </div>
-
-      <div>
-      <button style = {{
-        background: Colors.fviolet, 
-        position: 'absolute', 
-        transform: `translate(${topwidth / 2 - 420}px, ${topheight / 4}px)`,
-        width: topheight,
-        height: topheight / 2,
-        fontSize: 20,
-        border: 'none',
-      }}
-      onClick={() => IncreaseMonth(-1)}> Prev
-      </button>
-      </div>
-
-      <div>
-      <button style = {{
-        background: 'green', 
-        position: 'absolute', 
-        transform: `translate(${topwidth / 2 + 300}px, ${topheight / 4}px)`,
-        width: topheight,
-        height: topheight / 2,
-        fontSize: 20
-      }}
-      onClick={() => IncreaseMonth(1)}> Forw
-      </button>
-      </div>
-
-      <div>
-      <Link to={"/week/" + linkString(date)}>
-      <button style = {{
-        background: Colors.fpink, 
-        position: 'absolute', 
-        transform: `translate(${100}px, ${topheight / 4}px)`,
-        width: topheight,
-        height: topheight / 2,
-        fontSize: 20
-      }}> 
-      To Chart
-      </button>
-      </Link>
-      </div>
 
       {!view && [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
         11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
