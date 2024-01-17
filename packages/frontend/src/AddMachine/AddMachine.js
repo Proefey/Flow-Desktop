@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import Colors from "../Const/Colors"
+import Triangle from "@react-native-toolkit/triangle";
 
 const AddMachine = (props) => {
   const navigate = useNavigate();
@@ -82,31 +84,47 @@ const AddMachine = (props) => {
 
   return (
     <div>
-      <h2>Simple Form</h2>
-      <form>
-        <label>
-          Machine Name
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Machine ID Number
-          <input
-            type="number"
-            name="ID"
-            value={formData.ID}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <button onClick={onsave}>Submit</button>
-      </form>
-      <button onClick={() => navigate("/month")}>Back</button>
+      <style>{'body { background-color: #000000; }'}</style> 
+      <div         
+        style = {{
+        transform: `translate(${10}vw, ${25}vh)`,
+        position:'absolute',
+        background: Colors.flightblue,
+        opacity: 1,
+        width: '50vw',
+        height: '50vh',
+        border: 'solid',
+        justifyContent: 'center',
+        alignItems: 'center',
+        }}>
+        <div>
+        <h2>Simple Form</h2>
+        <form>
+          <label>
+            Machine Name
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Machine ID Number
+            <input
+              type="number"
+              name="ID"
+              value={formData.ID}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <button onClick={onsave}>Submit</button>
+        </form>
+        <button onClick={() => navigate("/month")}>Back</button>
+        </div>
+      </div>
     </div>
   );
 };

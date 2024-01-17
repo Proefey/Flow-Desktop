@@ -21,6 +21,26 @@ const Taskbar = props => {
   var month = firstdate.getMonth();
   var day = firstdate.getDay();
   var year = firstdate.getFullYear();
+  var [name, setName] = useState("");
+
+  const addHeader = props.addHeader;
+  const UID = props.UID;
+
+  useEffect(() => {
+    function fetchUser() {
+      const promise = fetch(`http://localhost:5000/users/` + UID, {
+          headers: addHeader()
+      });
+      return promise;
+    }
+    fetchUser()
+        .then((res) => res.json())
+        .then((json) => setName(json["name"]))
+        .catch((error) => {
+            console.log(error);
+            setName(""); // To indicate API call failed
+        });
+  }, [UID, addHeader]);
 
   //Calendar Position
   const headerx = 350;
@@ -96,55 +116,48 @@ const Taskbar = props => {
           fontWeight: 'bold',
           color: Colors.flightblue,
         }}>
+        Welcome <br/>
+        {name}
         </p>
-        </div>
-
-        <div>
-        <button style = {{
-          background: Colors.fviolet, 
-          position: 'absolute', 
-          transform: `translate(${topwidth / 2 - 420}px, ${topheight / 4}px)`,
-          width: topheight,
-          height: topheight / 2,
-          fontSize: 20,
-          border: 'none',
-        }}
-        onClick={() => 1}> Prev
-        </button>
-        </div>
-
-        <div>
-        <button style = {{
-          background: 'green', 
-          position: 'absolute', 
-          transform: `translate(${topwidth / 2 + 300}px, ${topheight / 4}px)`,
-          width: topheight,
-          height: topheight / 2,
-          fontSize: 20
-        }}
-        onClick={() => 1}> Forw
-        </button>
         </div>
 
         <div>
         <Link to={"/week/" + linkString(date)}>
         <button style = {{
-          background: Colors.fpink, 
+          background: Colors.fdarkblue, 
           position: 'absolute', 
-          transform: `translate(${100}px, ${topheight / 4}px)`,
-          width: topheight,
-          height: topheight / 2,
+          transform: `translate(${63}vw, ${topheight / 4}px)`,
+          width: '10vw',
+          height: '6vh',
           fontSize: 20
         }}> 
         To Chart
         </button>
         </Link>
         </div>
+
+        <div>
+        <Link to={"/month/" + linkString(date)}>
+        <button style = {{
+          background: Colors.fdarkblue, 
+          position: 'absolute', 
+          transform: `translate(${75}vw, ${topheight / 4}px)`,
+          width: '10vw',
+          height: '6vh',
+          fontSize: 20
+        }}> 
+        To Calendar
+        </button>
+        </Link>
+        </div>
+
+        <div>
         <Dropdown 
           changeTarget = {props.changeTarget}
           addHeader={props.addHeader}
           UID = {props.UID}
         />
+        </div>
       </div>
   );
 }

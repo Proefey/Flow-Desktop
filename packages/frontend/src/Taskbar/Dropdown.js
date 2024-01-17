@@ -21,7 +21,6 @@ const Dropdown = (props) => {
     });
     return promise;
   }
-  console.info(options);
   useEffect(() => {
     fetchData()
         .then((res) => res.json())
@@ -100,7 +99,7 @@ const Dropdown = (props) => {
     <div
       style={{
         position: 'absolute',
-        transform: `translate(${280}px, ${30}px)`
+        transform: `translate(${100}px, ${30}px)`
       }}
     >
       <div

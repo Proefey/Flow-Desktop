@@ -5,6 +5,8 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Link, useNavigate } from "react-router-dom";
+import Colors from "../Const/Colors"
+import Triangle from "@react-native-toolkit/triangle";
 
 const API_URL = "http://localhost:5000";
 
@@ -58,56 +60,79 @@ function TheForm(props) {
     };
 
     return (
-        <Form>
-            <Row className="align-items-center">
-                <Col xs="auto">
-                    <Form.Group controlId="formBasicTitle">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="username"
-                            placeholder="Enter username"
-                            value={user.username}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
-                </Col>
-            </Row>
-
-            <Row className="align-items-center">
-                <Col xs="auto">
-                    <Form.Group controlId="formBasicDescription">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            name="pwd"
-                            placeholder="Enter password"
-                            value={user.pwd}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
-                </Col>
-            </Row>
-            {errorMessage && (
-                <div
-                    style={{ marginTop: "10px" }}
-                    className="alert alert-danger"
-                    role="alert"
+        <div>
+            <style>{'body { background-color: #000000; }'}</style> 
+            <div         
+                style = {{
+                  transform: `translate(${10}vw, ${25}vh)`,
+                  position:'absolute',
+                  background: Colors.flightblue,
+                  opacity: 1,
+                  width: '50vw',
+                  height: '50vh',
+                  border: 'solid',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <h2
+                    style = {{
+                        textAlign: 'center',
+                    }}
                 >
-                    {errorMessage}
-                </div>
-            )}
-            <div style={{ marginTop: "10px" }}>
-                <Link to="/signup">
-                    <Button variant="link">Create a new account</Button>
-                </Link>
+                Login
+                </h2>
+                <Form>
+                    <Row className="align-items-center">
+                        <Col xs="auto">
+                            <Form.Group controlId="formBasicTitle">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="username"
+                                    placeholder="Enter username"
+                                    value={user.username}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Row className="align-items-center">
+                        <Col xs="auto">
+                            <Form.Group controlId="formBasicDescription">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    name="pwd"
+                                    placeholder="Enter password"
+                                    value={user.pwd}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    {errorMessage && (
+                        <div
+                            style={{ marginTop: "10px" }}
+                            className="alert alert-danger"
+                            role="alert"
+                        >
+                            {errorMessage}
+                        </div>
+                    )}
+                    <div style={{ marginTop: "10px" }}>
+                        <Link to="/signup">
+                            <Button variant="link">Create a new account</Button>
+                        </Link>
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                        <Button variant="success" onClick={submitForm}>
+                            Submit
+                        </Button>
+                    </div>
+                </Form>
             </div>
-            <div style={{ marginTop: "10px" }}>
-                <Button variant="success" onClick={submitForm}>
-                    Submit
-                </Button>
-            </div>
-        </Form>
+        </div>
     );
 }
 export default TheForm;

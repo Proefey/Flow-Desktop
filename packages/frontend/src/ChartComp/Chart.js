@@ -18,12 +18,12 @@ const Chart = props => {
     return (
       <div className='Chart'>
         <LineChart 
-          width={1900} 
+          width={1500} 
           height={800} 
           data={props.data}
           margin={{top: 45, bottom: 45, right: 20, left: 20}}
         >
-          <XAxis dataKey="weekday" />
+          <XAxis dataKey="date" />
           <YAxis yAxisId="left">
           <Label
              style={{

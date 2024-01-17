@@ -10,20 +10,21 @@ import axios from 'axios';
 const port = 5000;
 
 const CalWeek = props => {
-
+  const target = props.Target;
   const addHeader = props.addHeader;
-  //HELPER FUNCTIONS
-  //Increases (And decreases) the week
-  function IncreaseWeek(num){
-    setDate(new Date(year, month, dayDate + (7 * num)));
-  }
+  const [beginDate, setBegin] = useState(new Date(0));
+  const [endDate, setEnd] = useState(new Date());
 
-  //Convert Date to String For Linking
-  function linkString(linkDate){
-    const linkYear = linkDate.getFullYear();
-    const linkMonth = linkDate.getMonth() + 1;
-    const linkDay = linkDate.getDate();
-    return linkYear + "-" + linkMonth + "-" + linkDay;
+  const handleBegin = (e) => {
+    setBegin(e.target.value);
+  };
+  const handleEnd = (e) => {
+    setEnd(e.target.value);
+  };
+
+  function dateCompare(date1, date2){
+      if(date1 == null || date2 == null) return true;
+      return date1 >= date2;
   }
 
   function sameDay(d1, d2) {
@@ -34,7 +35,7 @@ const CalWeek = props => {
 
     useEffect(() => {
         function fetchData() {
-            const promise = fetch(`http://localhost:5000/data/2`, {
+            const promise = fetch(`http://localhost:5000/data/` + target, {
                 headers: addHeader()
             });
             return promise;
@@ -46,7 +47,7 @@ const CalWeek = props => {
                 console.log(error);
                 setData(null); // To indicate API call failed
             });
-    }, [addHeader]);
+    }, [target, addHeader]);
 
   //Constants
   const [data, setData] = useState([]);
@@ -59,38 +60,6 @@ const CalWeek = props => {
 
   //Obtaining Date Information
   //Note: Vulnerable to invalid dates
-  let params = useParams();
-  var pstDate = params['newdate'] + " PST";
-  var [date,setDate] = useState(new Date(pstDate));
-  var month = date.getMonth();
-  var day = date.getDay();
-  var dayDate = date.getDate();
-  var year = date.getFullYear();
-
-  //Leap Year Calculation
-  if(year % 4 == 0){
-    if(year % 100 == 0){
-      if(year % 400 == 0){
-        maxDays[1] = 29;
-      }
-      else{
-        maxDays[1] = 28;
-      }
-    }
-    else{
-      maxDays[1] = 29;
-    }
-  }
-  else{
-    maxDays[1] = 28;
-  }
-
-  //Calculate Current Week
-  var datearr = new Array(7);
-  datearr[0] = new Date(year, month, dayDate - day);
-  for(var i = 1; i < 7; i++){
-    datearr[i] = new Date(year, month, dayDate - day + i);
-  }
 
   //Header
   const headerx = 250;
@@ -102,186 +71,112 @@ const CalWeek = props => {
   const topheight = 120;
   const topwidth = window.innerWidth;
 
-  var humidity = new Array(7);
-  var powerConsumption = new Array(7);
-  var TDS = new Array(7);
-  var ambientTemp = new Array(7);
-  var waterProduction = new Array(7);
-  var waterLevel = new Array(7);
-  var display = new Array(6);
-
 
   var chartarr = new Array();
+  var data_num = 0;
+  var total_power = 0;
+  var total_water = 0;
+  var total_humidity = 0;
+  var total_temp = 0;
+  var total_tds = 0;
   if(data != null){
-    for(var i = 0; i < 7; i++){
-        var newPC = null;
-        var newWP = null;
-        for(var j = 0; j < data.length; j++){
-          var newtime = data[j]['timestamp'];
-          var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
-          console.info(startDate);
-          if(sameDay(datearr[i], startDate)){
-            var newdata = data[j];
-            newPC = newdata['power'];
-            newWP = newdata['waterproduced'];
-          }
-        }
-      var chartdata = {};
-      chartdata["weekday"] = weekdays[i];
-      chartdata["powerConsumption"] = newPC;
-      chartdata["waterProduction"]= newWP;
-      
-      chartarr.push(chartdata);
+    for(var i = 0; i < data.length; i++){
+      var newtime = data[i]['timestamp'];
+      var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
+      if(dateCompare(startDate, new Date(beginDate)) && dateCompare(new Date(endDate), startDate)){
+        data_num++;
+        total_power += data[i]['power'];
+        total_water += data[i]['waterproduced'];
+        total_humidity += data[i]['humidity'];
+        total_temp += data[i]['temp'];
+        total_tds += data[i]['tds'];
+
+        var chartdata = {};
+        chartdata["date"] = startDate.toString();
+        chartdata["powerConsumption"] = data[i]['power'];
+        chartdata["waterProduction"] = data[i]['waterproduced'];
+        chartdata["humidity"] = data[i]['humidity'];
+        chartdata["temp"] = data[i]['temp'];
+        chartdata["waterlevel"] = data[i]['waterlevel'];
+        chartdata["tds"] = data[i]['tds'];
+        chartarr.push(chartdata);
+      }
     }
+    console.info(chartarr);
+    console.info(data);
   }
 
   return (
     <div className="Main">
     <style>{`body { background-color: ${Colors.black}; }`}</style> 
-    <div
-      style = {{
-        transform: `translate(${0}px, ${10}px)`,
-        position:'absolute',
-        background: Colors.fblue,
-        opacity: 0.5,
-        width: topwidth,
-        height: topheight - 20,
-        border: 'none',
-      }}
-
-      />
-
-      <div
-      style = {{
-        transform: 'translate(${0}px, ${0}px)',
-        position:'absolute',
-        opacity: 1,
-        width: topwidth,
-        height: topheight,
-        border: 'none',
-        borderBottom: 'solid',
-        borderTop: 'solid',
-        borderColor: Colors.flightblue,
-      }}
-      />
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 - 260}px, ${2.5}px)`
-      }}>
-        <Triangle mode={"left"} base={topheight - 5} color={Colors.black}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 - 250}px, ${0}px)`
-      }}>
-        <Triangle mode={"left"} base={topheight} color={Colors.flightblue}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 - 240}px, ${0}px)`
-      }}>
-        <Triangle mode={"left"} base={topheight} color={Colors.black}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 + 160}px, ${2.5}px)`
-      }}>
-        <Triangle mode={"right"} base={topheight - 5} color={Colors.black}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 + 150}px, ${0}px)`
-      }}>
-        <Triangle mode={"right"} base={topheight} color={Colors.flightblue}/>
-      </div>
-
-      <div style ={{
-        position: 'absolute',
-        transform: `translate(${topwidth / 2 + 140}px, ${0}px)`
-      }}>
-        <Triangle mode={"right"} base={topheight} color={Colors.black}/>
-      </div>
-
-      <div
-      style = {{
-        transform: `translate(${topwidth / 2 - 150}px, ${0}px)`,
-        position:'absolute',
-        backgroundColor: Colors.black,
-        opacity: 1,
-        width: 300,
-        height: topheight,
-      }}
-      >
-      <p 
-      align = 'justify'
-      align = 'center'
-      style = {{
-        fontSize: 40,
-        fontWeight: 'bold',
-        color: Colors.flightblue,
-      }}>
-      {months[datearr[0].getMonth()] 
-      + " " + datearr[0].getDate() 
-      + " - " + months[datearr[6].getMonth()]
-      + " " + datearr[6].getDate()}
-      </p>
-      </div>
-
-      <div>
-      <button style = {{
-        background: Colors.fviolet, 
-        position: 'absolute', 
-        transform: `translate(${topwidth / 2 - 420}px, ${topheight / 4}px)`,
-        width: topheight,
-        height: topheight / 2,
-        fontSize: 20,
-        border: 'none',
-      }}
-      onClick={() => IncreaseWeek(-1)}> Prev
-      </button>
-      </div>
-
-      <div>
-      <button style = {{
-        background: 'green', 
-        position: 'absolute', 
-        transform: `translate(${topwidth / 2 + 300}px, ${topheight / 4}px)`,
-        width: topheight,
-        height: topheight / 2,
-        fontSize: 20
-      }}
-      onClick={() => IncreaseWeek(1)}> Forw
-      </button>
-      </div>
-
-      <div>
-      <Link to= {"/month/" + linkString(datearr[3])}>
-      <button style = {{
-        background: Colors.fpink, 
-        position: 'absolute', 
-        transform: `translate(${100}px, ${topheight / 4}px)`,
-        width: topheight,
-        height: topheight / 2,
-        fontSize: 20
-      }}> 
-      To Calendar
-      </button>
-      </Link>
-      </div>
-
       <div style = {{
         position: 'absolute', 
-        transform: `translate(${50}px, ${200}px)`
+        transform: `translate(${0}px, ${200}px)`
       }}>
         <Chart
         data = {chartarr}
         front = {false}
         />
+      </div>
+
+      <div         
+        style = {{
+        transform: `translate(${1600}px, ${200}px)`,
+        position:'absolute',
+        background: Colors.fdarkblue,
+        opacity: 1,
+        width: 400,
+        height: 700,
+        border: 'solid',
+        justifyContent: 'center',
+        alignItems: 'center',
+        }}>
+      <h2
+        style = {{
+        textAlign: 'center',
+        color: 'white'
+        }}
+      >
+      Options
+      </h2>
+      <label
+        style = {{
+        textAlign: 'center',
+        color: 'white'
+        }}
+      >
+        Select a Beginning Date:
+        <input
+          type="date"
+          value={beginDate}
+          onChange={handleBegin}
+        />
+      </label>
+      <label
+        style = {{
+        textAlign: 'center',
+        color: 'white'
+        }}
+      >
+        Select an End Date:
+        <input
+          type="date"
+          value={endDate}
+          onChange={handleEnd}
+        />
+      </label>
+      <p        
+        style = {{
+          color: 'white',
+          fontSize: 24,
+        }}
+      >
+      average power = {(total_power / data_num).toFixed(2)} W <br/>
+      average water = {(total_water / data_num).toFixed(2)} L <br/>
+      average temp = {(total_temp / data_num).toFixed(2)} F <br/>
+      average humidity = {(total_humidity / data_num).toFixed(2)} % <br/>
+      average tds = {(total_tds / data_num).toFixed(2)} ppm <br/>
+      </p>
       </div>
 
     </div>

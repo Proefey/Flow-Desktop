@@ -56,7 +56,11 @@ function MyApp() {
         <Route path = "week" element={<Navigate replace to = {curyear + "-" + curmonth + "-" + curday} />} />
         <Route path = "week/:newdate" element = {
           <div> 
-            <CalWeek addHeader = {addAuthHeader}/> 
+            <CalWeek 
+              addHeader = {addAuthHeader}
+              Target = {Target}
+              UID = {UID}
+              /> 
             <Taskbar 
               UID = {UID}
               changeTarget = {changeTarget}
