@@ -15,15 +15,9 @@ function MyApp() {
   const INVALID_TOKEN = "INVALID_TOKEN";
   const [token, setToken] = useState(INVALID_TOKEN);
   const [UID, setUID] = useState(null);
-  const [User, setUser] = useState(null);
-  const [MName, setMName] = useState([]);
-  const [MID, setMID] = useState([]);
   const [Target, setTarget] = useState("0");
   console.info(token);
-  console.info(User);
   console.info(UID);
-  console.info(MName);
-  console.info(MID);
   console.info("Target " + Target);
 
   function addAuthHeader(otherHeaders = {}) {
@@ -38,9 +32,7 @@ function MyApp() {
   }
 
   function changeTarget(index){
-    if(MID != null && MID.length > 0){
-      setTarget(MID[index]);
-    }
+    setTarget(index);
   }
 
   return (
@@ -50,20 +42,14 @@ function MyApp() {
         <Route path="/login" element={
                         <Login
                             saveToken={setToken}
-                            setUser={setUser}
                             setUID = {setUID}
-                            setMName={setMName}
-                            setMID={setMID}
-                            setTarget={setTarget}
                         />
                     }
         />
         <Route path="signup" element={
                         <Signup
                             saveToken={setToken}
-                            setUser={setUser}
-                            setMName={setMName}
-                            setMID={setMID}
+                            setUID = {setUID}
                         />
                     }
                 />
@@ -72,13 +58,10 @@ function MyApp() {
           <div> 
             <CalWeek addHeader = {addAuthHeader}/> 
             <Taskbar 
-              MName = {MName} 
-              MID = {MID} 
               UID = {UID}
               changeTarget = {changeTarget}
               addHeader={addAuthHeader}
-              setMName={setMName}
-              setMID={setMID}
+              Target = {Target}
             />  
           </div>
           } 
@@ -89,25 +72,19 @@ function MyApp() {
             <CalMonth 
               addHeader={addAuthHeader}
               Target = {Target}
+              UID = {UID}
               /> 
             <Taskbar 
-              MName = {MName} 
-              MID = {MID} 
               UID = {UID}
               changeTarget = {changeTarget}
               addHeader={addAuthHeader}
-              setMName={setMName}
-              setMID={setMID}
+              Target = {Target}
             />
           </div>
           } 
         />
         <Route path = "addMachine" element={
             <AddMachine
-              MID = {MID}
-              setMID = {setMID}
-              MName = {MName}
-              setMName = {setMName}
               UID = {UID}
               addHeader={addAuthHeader}
             />

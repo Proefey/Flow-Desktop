@@ -75,14 +75,6 @@ const CalMonth = props => {
         
       }
     }
-    /*
-    newH = Math.random(1) * 100;
-    newPC = Math.random(1) * 500;
-    newTDS = Math.random(1) * 10000;
-    newAT = Math.random(1) * 130;
-    newWP = Math.random(1) * 10;
-    newWL = Math.random(1) * 10;
-    */
     setH(newH);
     setPC(newPC);
     setTDS(newTDS);

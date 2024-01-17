@@ -1,11 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Colors from '../Const/Colors';
 import { Link, useNavigate } from "react-router-dom";
 
 
 const Dropdown = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleted, setDeleted] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [options, setOptions] = useState([]);
+  const [MID, setMID] = useState([]);
+  const [displayName, setDisplayName] = useState("Machine ID");
+
+  const addHeader = props.addHeader;
+  const UID = props.UID;
+  var target = 0;
+
+  function fetchData() {
+    const promise = fetch(`http://localhost:5000/users/` + UID, {
+        headers: addHeader()
+    });
+    return promise;
+  }
+  console.info(options);
+  useEffect(() => {
+    fetchData()
+        .then((res) => res.json())
+        .then((json) => {
+            setOptions(json["machineName"]);
+            setMID(json["machineID"]);
+          })
+        .catch((error) => {
+            console.log(error);
+            setOptions(null); // To indicate API call failed
+        });
+}, [UID, addHeader]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -14,34 +42,56 @@ const Dropdown = (props) => {
   function handleOptionSelect(index){
     setSelectedOption(index);
     setIsOpen(false);
-    props.changeTarget(index);
-    console.info(index);
+    if(isDeleted === false) {
+      props.changeTarget(MID[index]);
+      setDisplayName(options[index]);
+      target = index;
+    }
+    else if (options.length > 0){
+      props.changeTarget(MID[0]);
+      setDisplayName(options[0]);
+      target = 0;
+    }
+    console.info(isDeleted);
+    console.info("HELP" + index);
   };
+
+  const delay = ms => new Promise(res => setTimeout(res, ms));
 
   const handleDeleteOption = async (index) => {
     console.info("ToDelete" + index);
-    const DeleteMID = props.MID[index];
-    const DeleteMNAME = props.MName[index];
+    const DeleteMID = MID[index];
+    const DeleteMNAME = options[index];
     try {
         await fetch(
         `http://localhost:5000/users/` + props.UID + '/' + DeleteMNAME + '/' + DeleteMID,
           {
             method: "DELETE",
-            headers: props.addHeader(),
+            headers: addHeader(),
           }
         );
-        const updatedMName = [...props.MName];
-        const updatedMID = [...props.MID];
-        updatedMName.splice(index, 1);
-        updatedMID.splice(index, 1);
-        props.setMName(updatedMName);
-        props.setMID(updatedMID);
+        setDeleted(true);
+        console.info(isDeleted);
 
-        // Clear the selected option if it's deleted
-        if (selectedOption === index) {
-          setSelectedOption(null);
+        fetchData()
+        .then((res) => res.json())
+        .then((json) => {
+            setOptions(json["machineName"]);
+            setMID(json["machineID"]);
+          })
+        .catch((error) => {
+            console.log(error);
+            setOptions(null); // To indicate API call failed
+        });
+        if(options.length < 1){
+          setDisplayName("Machine ID");
+        }
+        else if(target == index){
+          props.changeTarget(MID[0]);
+          setDisplayName(options[0]);
         }
       } catch (error) {
+        delay(5000);
         console.error("Error deleting machine:", error);
     }
   };
@@ -66,7 +116,7 @@ const Dropdown = (props) => {
         }}
         onClick={toggleDropdown}
       >
-        <span>Machine ID</span>
+        <span>{displayName}</span>
         <div
           style={{
             transition: 'transform 0.3s ease-in-out',
@@ -97,7 +147,7 @@ const Dropdown = (props) => {
             }}
           >
             {/* Dynamically generate list items from the options array */}
-            {props.MName.map((option, index) => (
+            {options.map((option, index) => (
               <li
                 key={index}
                 style={{
@@ -117,7 +167,7 @@ const Dropdown = (props) => {
               <div>
                 <Link to = {"/addMachine"}>
                 <li
-                  key={props.MName.length + 1}
+                  key={options.length + 1}
                   style={{
                     padding: '10px',
                     cursor: 'pointer',

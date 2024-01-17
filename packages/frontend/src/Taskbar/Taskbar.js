@@ -141,13 +141,9 @@ const Taskbar = props => {
         </Link>
         </div>
         <Dropdown 
-          MName = {props.MName}
           changeTarget = {props.changeTarget}
           addHeader={props.addHeader}
-          MID = {props.MID}
           UID = {props.UID}
-          setMName={props.setMName}
-          setMID={props.setMID}
         />
       </div>
   );

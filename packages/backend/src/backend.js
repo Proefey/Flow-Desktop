@@ -92,6 +92,13 @@ app.get("/data/:id", authenticateUser, (req, res) => {
         });
 });
 
+app.post('/data', async (req, res) => {
+    const dataToAdd = req.body;
+    const added = await Services.addData(dataToAdd);
+    if (added) res.status(201).send(added);
+    else res.status(500).end();
+});
+
 app.listen(port, () => {
     if (port) {
       console.log(

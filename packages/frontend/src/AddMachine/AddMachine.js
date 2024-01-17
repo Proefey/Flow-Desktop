@@ -1,8 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
 const AddMachine = (props) => {
   const navigate = useNavigate();
+  const [MNAME, setMNAME] = useState([]);
+  const [MID, setMID] = useState([]);
+  const addHeader = props.addHeader;
+  const UID = props.UID;
+
+  function fetchData() {
+    const promise = fetch(`http://localhost:5000/users/` + UID, {
+        headers: addHeader()
+    });
+    return promise;
+  }
+
+  useEffect(() => {
+      fetchData()
+          .then((res) => res.json())
+          .then((json) => {
+              setMNAME(json["machineName"]);
+              setMID(json["machineID"]);
+            })
+          .catch((error) => {
+              console.log(error);
+              setMNAME(null); // To indicate API call failed
+          });
+  }, [UID, addHeader]);
+
   const [formData, setFormData] = useState({
     name: 'ex',
     ID: 0,
@@ -16,7 +41,8 @@ const AddMachine = (props) => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const onsave = (e) => {
+      e.preventDefault();
       // Check if name is given
       if (formData.name === "") {
           alert("Please give a name for the machine.");
@@ -27,31 +53,37 @@ const AddMachine = (props) => {
           alert("Please give a valid ID for the machine.");
           return;
       }
-      if(props.MName.includes(formData.name)){
+      if(MNAME.includes(formData.name)){
           alert("Name already given to different machine");
           return;
       }
-      if(props.MID.includes(formData.ID)){
+      if(MID.includes(formData.ID)){
           alert("ID already registered with user");
           return;
       }
+      handleSubmit();
+      navigate("/month")
+  }
+
+  const handleSubmit = async () => {
       try {
-        await fetch(
-        `http://localhost:5000/users/` + props.UID + '/' + formData.name + '/' + formData.ID,
+        fetch(
+        `http://localhost:5000/users/` + UID + '/' + formData.name + '/' + formData.ID,
           {
             method: "PUT",
             headers: props.addHeader()
           }
         );
       } catch (error) {
-        console.error("Error adding machine:", error);
+        console.error("Error adding machine:", error.message);
       }
+
   };
 
   return (
     <div>
       <h2>Simple Form</h2>
-      <form onSubmit={handleSubmit}>
+      <form>
         <label>
           Machine Name
           <input
@@ -72,7 +104,7 @@ const AddMachine = (props) => {
           />
         </label>
         <br />
-        <button type="submit">Submit</button>
+        <button onClick={onsave}>Submit</button>
       </form>
       <button onClick={() => navigate("/month")}>Back</button>
     </div>

@@ -34,7 +34,7 @@ export function registerUser(req, res) {
                                 .then((newUser) => {
                                     res.status(201).send({
                                         token: token,
-                                        taskList: newUser.taskList
+                                        UID: newUser._id,
                                     });
                                 })
                                 .catch((error) => {
@@ -105,10 +105,7 @@ export function loginUser(req, res) {
                         generateAccessToken(username).then((token) => {
                             res.status(200).send({
                                 token: token,
-                                name: user.name,
                                 UID: user._id,
-                                MID: user.machineID,
-                                MName: user.machineName
                             });
                         });
                     } else {

@@ -5,7 +5,7 @@ import SignupForm from "./SignUpForm.js";
 function Signup(props) {
     function signupUser(payload) {
         props.saveToken(payload.token);
-        console.log("taskList", payload.taskList);
+        props.setUID(payload.UID);
     }
 
     return (
