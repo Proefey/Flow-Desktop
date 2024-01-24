@@ -3,8 +3,9 @@ import Services from "./services.js";
 import cors from 'cors';
 import { registerUser, loginUser, authenticateUser } from "./authorize.js";
 
+const cors = require("cors");
 const app = express();
-const port = 80;
+const port = 8080;
 const APP_VERSION = "1.0.0";
 
 app.use(cors());
