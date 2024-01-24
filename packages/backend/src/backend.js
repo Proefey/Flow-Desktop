@@ -4,7 +4,7 @@ import cors from 'cors';
 import { registerUser, loginUser, authenticateUser } from "./authorize.js";
 
 const app = express();
-const port = 5000;
+const port = 80;
 const APP_VERSION = "1.0.0";
 
 app.use(cors());
