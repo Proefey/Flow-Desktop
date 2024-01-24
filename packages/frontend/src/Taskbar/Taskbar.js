@@ -3,6 +3,7 @@ import Colors from "../Const/Colors"
 import Triangle from "@react-native-toolkit/triangle";
 import { useParams, Link } from 'react-router-dom';
 import Dropdown from './Dropdown';
+import {Backend_URL} from "../Const/Urls";
 
 const Taskbar = props => {
 
@@ -16,11 +17,7 @@ const Taskbar = props => {
 
   let params = useParams();
   var pstDate = params['newdate'] + " PST";
-  var [date,setDate] = useState(new Date(pstDate));
-  var firstdate = new Date(date.getFullYear(), date.getMonth(), 1);
-  var month = firstdate.getMonth();
-  var day = firstdate.getDay();
-  var year = firstdate.getFullYear();
+  var date = new Date(pstDate)
   var [name, setName] = useState("");
 
   const addHeader = props.addHeader;
@@ -28,7 +25,7 @@ const Taskbar = props => {
 
   useEffect(() => {
     function fetchUser() {
-      const promise = fetch(`http://localhost:5000/users/` + UID, {
+      const promise = fetch(Backend_URL + `/users/` + UID, {
           headers: addHeader()
       });
       return promise;
@@ -42,17 +39,6 @@ const Taskbar = props => {
         });
   }, [UID, addHeader]);
 
-  //Calendar Position
-  const headerx = 350;
-  const headery = 25;
-  const header_width = 600;
-  const header_height = 60;
-  const calendarx = 90;
-  const calendary = 200;
-  const dialx = 1300;
-  const dialdx = 300;
-  const dialy = 200;
-  const dialdy = 250;
   const topheight = 120;
   const topwidth = window.innerWidth;
   return(
@@ -72,7 +58,7 @@ const Taskbar = props => {
 
         <div
         style = {{
-          transform: 'translate(${0}px, ${0}px)',
+          transform: `translate(${0}px, ${0}px)`,
           position:'absolute',
           opacity: 1,
           width: topwidth,
@@ -109,7 +95,6 @@ const Taskbar = props => {
         }}
         >
         <p 
-        align = 'justify'
         align = 'center'
         style = {{
           fontSize: 40,

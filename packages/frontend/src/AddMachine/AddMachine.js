@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback} from 'react';
+import { useNavigate } from "react-router-dom";
 import Colors from "../Const/Colors"
-import Triangle from "@react-native-toolkit/triangle";
+import {Backend_URL} from "../Const/Urls";
 
 const AddMachine = (props) => {
   const navigate = useNavigate();
@@ -10,12 +10,12 @@ const AddMachine = (props) => {
   const addHeader = props.addHeader;
   const UID = props.UID;
 
-  function fetchData() {
-    const promise = fetch(`http://localhost:5000/users/` + UID, {
-        headers: addHeader()
+  const fetchData = useCallback(() => {
+    const promise = fetch(Backend_URL + `/users/` + UID, {
+    headers: addHeader()
     });
     return promise;
-  }
+  }, [UID, addHeader]); 
 
   useEffect(() => {
       fetchData()
@@ -28,7 +28,7 @@ const AddMachine = (props) => {
               console.log(error);
               setMNAME(null); // To indicate API call failed
           });
-  }, [UID, addHeader]);
+  }, [UID, addHeader, fetchData]);
 
   const [formData, setFormData] = useState({
     name: 'ex',
@@ -70,7 +70,7 @@ const AddMachine = (props) => {
   const handleSubmit = async () => {
       try {
         fetch(
-        `http://localhost:5000/users/` + UID + '/' + formData.name + '/' + formData.ID,
+        Backend_URL + `/users/` + UID + '/' + formData.name + '/' + formData.ID,
           {
             method: "PUT",
             headers: props.addHeader()
@@ -98,7 +98,7 @@ const AddMachine = (props) => {
         alignItems: 'center',
         }}>
         <div>
-        <h2>Simple Form</h2>
+        <h2>Add Machine</h2>
         <form>
           <label>
             Machine Name

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Colors from '../Const/Colors';
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
+import {Backend_URL} from "../Const/Urls";
 
 
 const Dropdown = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleted, setDeleted] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [options, setOptions] = useState([]);
   const [MID, setMID] = useState([]);
   const [displayName, setDisplayName] = useState("Machine ID");
@@ -15,12 +15,13 @@ const Dropdown = (props) => {
   const UID = props.UID;
   var target = 0;
 
-  function fetchData() {
-    const promise = fetch(`http://localhost:5000/users/` + UID, {
-        headers: addHeader()
+  const fetchData = useCallback(() => {
+    const promise = fetch(Backend_URL + `/users/` + UID, {
+    headers: addHeader()
     });
     return promise;
-  }
+  }, [UID, addHeader]); 
+
   useEffect(() => {
     fetchData()
         .then((res) => res.json())
@@ -32,14 +33,13 @@ const Dropdown = (props) => {
             console.log(error);
             setOptions(null); // To indicate API call failed
         });
-}, [UID, addHeader]);
+}, [UID, addHeader, fetchData]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   function handleOptionSelect(index){
-    setSelectedOption(index);
     setIsOpen(false);
     if(isDeleted === false) {
       props.changeTarget(MID[index]);
@@ -64,7 +64,7 @@ const Dropdown = (props) => {
     const DeleteMNAME = options[index];
     try {
         await fetch(
-        `http://localhost:5000/users/` + props.UID + '/' + DeleteMNAME + '/' + DeleteMID,
+        Backend_URL  + `/users/` + props.UID + '/' + DeleteMNAME + '/' + DeleteMID,
           {
             method: "DELETE",
             headers: addHeader(),
@@ -86,7 +86,7 @@ const Dropdown = (props) => {
         if(options.length < 1){
           setDisplayName("Machine ID");
         }
-        else if(target == index){
+        else if(target === index){
           props.changeTarget(MID[0]);
           setDisplayName(options[0]);
         }

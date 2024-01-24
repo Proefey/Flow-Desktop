@@ -1,13 +1,9 @@
 import React, {useState, useEffect} from "react";
 import CalendarSquare from './CalMonthSquare';
-import { useParams, Link } from 'react-router-dom';
-import Form from "./Form";
+import { useParams} from 'react-router-dom';
 import Dial from "../DialComp/Dial";
-import axios from 'axios';
-import Colors from "../Const/Colors"
-import Triangle from "@react-native-toolkit/triangle";
+import {Backend_URL} from "../Const/Urls";
 
-const port = 5000;
 
 
 
@@ -19,29 +15,6 @@ const CalMonth = props => {
   const addHeader = props.addHeader;
   console.info("Target: " + target);
   /* HELPER FUNCTIONS */
-  //Increases or Decreases The Selected Month
-  function IncreaseMonth(left){
-    var newmonth = date.getMonth() + left;
-    var newyear = date.getFullYear();
-    if(newmonth > 11) {
-      newmonth = 0;
-      newyear ++;
-    }
-    if(newmonth < 0) {
-      newmonth = 11;
-      newyear --;
-    }
-    setDate(new Date(newyear, newmonth, 1))
-  }
-
-  //Convert Date to String For Linking
-  function linkString(linkDate){
-    const linkYear = linkDate.getFullYear();
-    const linkMonth = linkDate.getMonth() + 1;
-    const linkDay = linkDate.getDate();
-    return linkYear + "-" + linkMonth + "-" + linkDay;
-  }
-
   function sameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
@@ -86,7 +59,7 @@ const CalMonth = props => {
 
     useEffect(() => {
         function fetchData() {
-            const promise = fetch(`http://localhost:5000/data/` + target, {
+            const promise = fetch(Backend_URL + `/data/` + target, {
                 headers: addHeader()
             });
             return promise;
@@ -98,17 +71,11 @@ const CalMonth = props => {
                 console.log(error);
                 setData(null); // To indicate API call failed
             });
-        console.info(data);
     }, [target, addHeader]);
 
   //Constants
   const [data, setData] = useState([]);
-  const { innerWidth: width, innerHeight: height } = window;
   const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const months = ['January', 'February', 'March', 
-                   'April', 'May', 'June', 
-                   'July', 'August', 'September', 
-                   'October', 'November', 'December'];
   const maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
   //Note: Vulnerable to invalid dates
@@ -121,9 +88,9 @@ const CalMonth = props => {
   var year = firstdate.getFullYear();
 
   //Leap Year Calculation
-  if(year % 4 == 0){
-    if(year % 100 == 0){
-      if(year % 400 == 0){
+  if(year % 4 === 0){
+    if(year % 100 === 0){
+      if(year % 400 === 0){
         maxDays[1] = 29;
       }
       else{
@@ -162,18 +129,12 @@ const CalMonth = props => {
   }
 
   //Calendar Position
-  const headerx = 350;
-  const headery = 25;
-  const header_width = 600;
-  const header_height = 60;
   const calendarx = 90;
   const calendary = 200;
   const dialx = 1300;
   const dialdx = 300;
   const dialy = 200;
   const dialdy = 250;
-  const topheight = 120;
-  const topwidth = window.innerWidth;
 
   const [ambientTemp, setAT] = useState(0);
   const [waterLevel, setWL] = useState(0);
@@ -182,10 +143,8 @@ const CalMonth = props => {
   const [powerConsumption, setPC] = useState(0);
   const [waterProd, setWP] = useState(0);
 
-  const [view, setView] = useState(false);
-
   if(data != null){
-    for(var i = 0; i < data.length; i++){
+    for(i = 0; i < data.length; i++){
         var newtime = data[i]['timestamp'];
         var startDate = new Date(newtime);
         //var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
@@ -204,7 +163,7 @@ const CalMonth = props => {
     <div className="Main">
     <style>{'body { background-color: #000000; }'}</style> 
 
-      {!view && [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
         11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
         21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
         31, 32, 33, 34, 35, 36, 37, 38, 39, 40,

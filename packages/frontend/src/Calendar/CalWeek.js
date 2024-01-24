@@ -1,13 +1,7 @@
 import React, {useState, useEffect} from "react";
-import CalWeekSquare from './CalWeekSquare';
-import { useParams, Link } from 'react-router-dom';
 import Chart from "../ChartComp/Chart";
 import Colors from "../Const/Colors"
-import Triangle from "@react-native-toolkit/triangle";
-
-import axios from 'axios';
-
-const port = 5000;
+import {Backend_URL} from "../Const/Urls";
 
 const CalWeek = props => {
   const target = props.Target;
@@ -27,15 +21,9 @@ const CalWeek = props => {
       return date1 >= date2;
   }
 
-  function sameDay(d1, d2) {
-  return d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
-  }
-
     useEffect(() => {
         function fetchData() {
-            const promise = fetch(`http://localhost:5000/data/` + target, {
+            const promise = fetch(Backend_URL + `/data/` + target, {
                 headers: addHeader()
             });
             return promise;
@@ -51,28 +39,8 @@ const CalWeek = props => {
 
   //Constants
   const [data, setData] = useState([]);
-  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const months = ['January', 'February', 'March', 
-                   'April', 'May', 'June', 
-                   'July', 'August', 'September', 
-                   'October', 'November', 'December'];
-  const maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-  //Obtaining Date Information
-  //Note: Vulnerable to invalid dates
-
-  //Header
-  const headerx = 250;
-  const headery = 50;
-  const header_width = 800;
-  const header_height = 60;
-
-  //Calendar Position
-  const topheight = 120;
-  const topwidth = window.innerWidth;
-
-
-  var chartarr = new Array();
+  var chartarr = [];
   var data_num = 0;
   var total_power = 0;
   var total_water = 0;

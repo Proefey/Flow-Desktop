@@ -90,7 +90,7 @@ app.get("/data/:id", authenticateUser, (req, res) => {
         .catch((error) => {
             console.log(error);
         });
-});s
+});
 
 app.listen(port, () => {
     if (port) {

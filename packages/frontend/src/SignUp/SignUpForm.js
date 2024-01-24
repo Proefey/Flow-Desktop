@@ -6,9 +6,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useNavigate } from "react-router-dom";
 import Colors from "../Const/Colors"
-import Triangle from "@react-native-toolkit/triangle";
 
-const API_URL = "http://localhost:5000";
+import {Backend_URL} from "../Const/Urls";
 
 function SignupForm(props) {
     const [user, setUser] = useState({
@@ -34,7 +33,7 @@ function SignupForm(props) {
             return;
         }
 
-        fetch(`${API_URL}/signup`, {
+        fetch(`${Backend_URL}/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
