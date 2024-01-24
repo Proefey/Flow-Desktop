@@ -50,6 +50,7 @@ const Dropdown = (props) => {
       props.changeTarget(MID[0]);
       setDisplayName(options[0]);
       target = 0;
+      setDeleted(false);
     }
     console.info(isDeleted);
     console.info("HELP" + index);

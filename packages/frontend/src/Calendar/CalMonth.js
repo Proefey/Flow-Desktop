@@ -61,7 +61,8 @@ const CalMonth = props => {
     if(data != null){
       for(var i = 0; i < data.length; i++){
         var newtime = data[i]['timestamp'];
-        var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
+        var startDate = new Date(newtime);
+        //var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
         console.info(startDate);
         if(sameDay(d, startDate)){
           newdata = data[i];
@@ -97,6 +98,7 @@ const CalMonth = props => {
                 console.log(error);
                 setData(null); // To indicate API call failed
             });
+        console.info(data);
     }, [target, addHeader]);
 
   //Constants
@@ -185,7 +187,8 @@ const CalMonth = props => {
   if(data != null){
     for(var i = 0; i < data.length; i++){
         var newtime = data[i]['timestamp'];
-        var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
+        var startDate = new Date(newtime);
+        //var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
         for(var j = 0; j < 42; j++){
           if(sameDay(displaydays[j], startDate)){
             hasdata[j] = true;

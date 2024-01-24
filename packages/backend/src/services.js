@@ -90,28 +90,6 @@ function sameDay(d1, d2) {
     d1.getDate() === d2.getDate();
 }
 
-function addData(data){
-    const dataToAdd = new dataPackModel(data);
-    console.info(dataToAdd['machineID']);
-    var replaceData = dataPackModel.find({machineID: 4});
-    console.info(replaceData.length);
-    console.info(replaceData);
-    if(replaceData != null && replaceData.length > 0){
-        const dataToAddDate = new Date(dataToAdd['timestamp'].replace(/-/g, "/").replace("T", " "));
-        console.info("Check Date: " + dataToAddDate);
-        for(var i = 0; i < replaceData.length; i++){
-            var newDate = new Date(replaceData[i]['timestamp'].replace(/-/g, "/").replace("T", " "));
-            console.info(newDate);
-            if(sameDay(dataToAddDate, newDate)){
-                dataPackModel.findByIdAndDelete(replaceData[i]['id']);
-            }
-        }
-    }
-    //const promise = dataToAdd.save();
-    return true;
-}
-
-
 
 export default {
     getUsers,
@@ -122,5 +100,4 @@ export default {
     editUser,
     deleteMachine,
     getData,
-    addData
 };

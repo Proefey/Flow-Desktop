@@ -90,14 +90,7 @@ app.get("/data/:id", authenticateUser, (req, res) => {
         .catch((error) => {
             console.log(error);
         });
-});
-
-app.post('/data', async (req, res) => {
-    const dataToAdd = req.body;
-    const added = await Services.addData(dataToAdd);
-    if (added) res.status(201).send(added);
-    else res.status(500).end();
-});
+});s
 
 app.listen(port, () => {
     if (port) {

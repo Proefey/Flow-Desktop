@@ -82,7 +82,8 @@ const CalWeek = props => {
   if(data != null){
     for(var i = 0; i < data.length; i++){
       var newtime = data[i]['timestamp'];
-      var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
+      var startDate = new Date(newtime);
+      //var startDate = new Date(newtime.replace(/-/g, "/").replace("T", " "));
       if(dateCompare(startDate, new Date(beginDate)) && dateCompare(new Date(endDate), startDate)){
         data_num++;
         total_power += data[i]['power'];
