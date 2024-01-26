@@ -96,6 +96,10 @@ app.get("/data/:id", authenticateUser, (req, res) => {
         });
 });
 
+app.get("/", (req, res) => {
+    res.sendStatus(200);
+});
+
 app.listen(port, () => {
     if (port) {
       console.log(
