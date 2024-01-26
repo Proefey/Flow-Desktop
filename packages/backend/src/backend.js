@@ -85,7 +85,6 @@ app.delete("/users/:id/:MNAME/:MID", authenticateUser, (req, res) => {
 
 app.get("/data/:id", authenticateUser, (req, res) => {
     const MID = req.params.id;
-    console.info("Delete: " + MID);
     Services.getData(MID)
         .then((data) => {
             data = { data: data };
@@ -97,7 +96,15 @@ app.get("/data/:id", authenticateUser, (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.sendStatus(200);
+    const MID = 2;
+    Services.getData(MID)
+        .then((data) => {
+            data = { data: data };
+            res.send(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 });
 
 app.listen(port, () => {
