@@ -33,7 +33,6 @@ function TheForm(props) {
         }
 
         fetch(`${Backend_URL}/login`, {
-            mode: 'no-cors',
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
