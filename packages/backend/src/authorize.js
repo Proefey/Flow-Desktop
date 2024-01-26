@@ -96,7 +96,7 @@ export function loginUser(req, res) {
 
     Services.getUserByUsername(username).then((user) => {
         if (!user) {
-            res.status(401).send("Unauthorized");
+            res.status(401).send("User Not Found");
         } else {
             bcrypt
                 .compare(pwd, user.password)
@@ -110,7 +110,7 @@ export function loginUser(req, res) {
                         });
                     } else {
                         // invalid password
-                        res.status(401).send("Unauthorized");
+                        res.status(401).send("Incorrect Password");
                     }
                 })
                 .catch(() => {
