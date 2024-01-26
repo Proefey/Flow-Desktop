@@ -7,7 +7,11 @@ const app = express();
 const port = 8080;
 const APP_VERSION = "1.0.0";
 
-app.use(cors());
+var corsOptions = {
+  origin: "http://localhost:3000"
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post("/login", loginUser);
