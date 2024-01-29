@@ -13,7 +13,7 @@
     "web-vitals": "^2.1.4",
     "react-router-dom": "latest",
     "react-countup": "latest",
-    "react-boostrap": "latest",
+    "react-boostrap": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
