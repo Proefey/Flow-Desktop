@@ -14,8 +14,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "latest",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "sass": "^9.8.1"
+    "sass": "^9.8.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "react-refresh": "^0.14.0",
     "sass": "^1.70.0"
   }
 }
