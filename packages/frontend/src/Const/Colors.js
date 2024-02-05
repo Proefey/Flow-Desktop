@@ -13,4 +13,4 @@ const Colors = {
   flightblue: '#4cc9f0'
 };
 
-export default Colors
+export default Colors;
