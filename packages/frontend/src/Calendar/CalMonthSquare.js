@@ -1,27 +1,7 @@
-import React, { Component } from 'react';
-import {Link } from 'react-router-dom';
+import React from 'react';
 import Colors from '../Const/Colors'
 
 const CalMonthSquare = props => {
-
-	/* HELPER FUNCTIONS */
-	//Trunacte Function
-	function truncate(str, maxlength) {
-	  if (str.length > maxlength){
-	    return str.slice(0, maxlength - 1) + '…';
-	  }
-	  else return str;
-	}
-
-	//Convert Date to String For Linking
-  	function linkString(linkDate){
-	    const linkYear = linkDate.getFullYear();
-	    const linkMonth = linkDate.getMonth() + 1;
-	    const linkDay = linkDate.getDate();
-	    return linkYear + "-" + linkMonth + "-" + linkDay;
-  	}
-
-
 
 	//Constants (Controls Width and Height of all calendar squares)
 	const height = 124;
@@ -45,7 +25,7 @@ const CalMonthSquare = props => {
 	//Out of month days are greyed out
 	var titleopacity = 1;
 	var inmonth = true;
-	if((props.month) != date.getMonth()) {
+	if((props.month) !== date.getMonth()) {
 		titleopacity = 0.25;
 		inmonth = false;
 	}
@@ -62,7 +42,6 @@ const CalMonthSquare = props => {
 			border: 'none'
 			}}>
 			<p 
-			align = 'justify'
 			align = 'center'
 			style = {{
         		fontSize: 16,
@@ -81,7 +60,6 @@ const CalMonthSquare = props => {
 			height: height * 1 / 4,
 			}}>
 			<p 
-			align = 'justify'
 			align = 'center'
 			style = {{
         		fontSize: 16,
