@@ -1,7 +1,5 @@
-@import '../Const/colors';
-
 .Chart {
-  background: $black;
+  background: #000000;
   margin-top: 30px;
   position: absolute;
   padding: 0px;
@@ -11,7 +9,7 @@
 }
 
 .data-table{
-  background: $black;
+  background: #000000;
   margin-top: 35px;
   margin-left: 20px;
   color: white;
