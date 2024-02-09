@@ -2,6 +2,9 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.12.0"
+  },
   "dependencies": {
     "@react-native-toolkit/triangle": "^0.0.1",
     "@testing-library/jest-dom": "^5.17.0",
