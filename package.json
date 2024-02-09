@@ -10,6 +10,8 @@
   "author": "Team Flow",
   "license": "ISC",
   "dependencies": {
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-numeric-separator": "^7.23.4",
     "@babel/plugin-transform-optional-catch-binding": "^7.23.4",
     "@react-native-toolkit/triangle": "^0.0.1",
     "@testing-library/jest-dom": "^5.17.0",
