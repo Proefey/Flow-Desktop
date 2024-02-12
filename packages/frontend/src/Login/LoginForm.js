@@ -8,13 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Colors from "../Const/Colors"
 
 import {Backend_URL} from "../Const/Urls";
-import cors from 'cors';
-
-var corsOptions = {
-  origin: "http://localhost:3000"
-};
-
-app.use(cors(corsOptions));
 
 function TheForm(props) {
     const [user, setUser] = useState({
