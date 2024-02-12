@@ -11,6 +11,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/recharts": "^1.8.29",
+    "cors": "^2.8.5",
     "react": "^18.2.0",
     "react-bootstrap-validation": "^0.1.11",
     "react-countup": "^6.5.0",
