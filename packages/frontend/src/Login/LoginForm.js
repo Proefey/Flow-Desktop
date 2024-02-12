@@ -9,6 +9,12 @@ import Colors from "../Const/Colors"
 
 import {Backend_URL} from "../Const/Urls";
 
+var corsOptions = {
+  origin: "http://localhost:3000"
+};
+
+app.use(cors(corsOptions));
+
 function TheForm(props) {
     const [user, setUser] = useState({
         username: "",
@@ -26,7 +32,7 @@ function TheForm(props) {
         }));
     }
 
-    const submitForm = () => {
+    const submitForm = async () => {
         if (!user.username || !user.pwd) {
             setErrorMessage("Please enter both username and password");
             return;
