@@ -26,7 +26,7 @@ function TheForm(props) {
         }));
     }
 
-    const submitForm = async () => {
+    const submitForm = () => {
         if (!user.username || !user.pwd) {
             setErrorMessage("Please enter both username and password");
             return;
