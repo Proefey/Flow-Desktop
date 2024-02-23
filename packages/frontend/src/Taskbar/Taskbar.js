@@ -107,7 +107,22 @@ const Taskbar = props => {
         </div>
 
         <div>
-        <Link to={"/week/" + linkString(date)}>
+        <Link to={"/multiview"}>
+        <button style = {{
+          background: Colors.fdarkblue, 
+          position: 'absolute', 
+          transform: `translate(${24}vw, ${topheight / 4}px)`,
+          width: '10vw',
+          height: '6vh',
+          fontSize: 20
+        }}> 
+        To Multi View
+        </button>
+        </Link>
+        </div>
+
+        <div>
+        <Link to={"/singleView"}>
         <button style = {{
           background: Colors.fdarkblue, 
           position: 'absolute', 
@@ -116,13 +131,13 @@ const Taskbar = props => {
           height: '6vh',
           fontSize: 20
         }}> 
-        To Chart
+        To Single View
         </button>
         </Link>
         </div>
 
         <div>
-        <Link to={"/month/" + linkString(date)}>
+        <Link to={"/predictor"}>
         <button style = {{
           background: Colors.fdarkblue, 
           position: 'absolute', 
@@ -131,7 +146,22 @@ const Taskbar = props => {
           height: '6vh',
           fontSize: 20
         }}> 
-        To Calendar
+        To Predictor
+        </button>
+        </Link>
+        </div>
+
+        <div>
+        <Link to={"/overview"}>
+        <button style = {{
+          background: Colors.fdarkblue, 
+          position: 'absolute', 
+          transform: `translate(${87}vw, ${topheight / 4}px)`,
+          width: '10vw',
+          height: '6vh',
+          fontSize: 20
+        }}> 
+        To Overview
         </button>
         </Link>
         </div>
@@ -141,6 +171,8 @@ const Taskbar = props => {
           changeTarget = {props.changeTarget}
           addHeader={props.addHeader}
           UID = {props.UID}
+          changeOptions = {props.changeOptions}
+          changeMID = {props.changeMID}
         />
         </div>
       </div>

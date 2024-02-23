@@ -43,7 +43,7 @@ function TheForm(props) {
                 if (res.status === 200) {
                     res.json().then((payload) => {
                         props.loginUser(payload);
-                        navigate("/month");
+                        navigate("/overview");
                     });
                 } else {
                     setErrorMessage("Incorrect username or password");

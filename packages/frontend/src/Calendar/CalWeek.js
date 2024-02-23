@@ -71,8 +71,6 @@ const CalWeek = props => {
         chartarr.push(chartdata);
       }
     }
-    console.info(chartarr);
-    console.info(data);
   }
 
   return (

@@ -14,12 +14,17 @@ import {
  * Chart, using recharts: recharts.org
  */
 const Chart = props => {
-
+    var dataKeyA = props.a;
+    var nameA = props.aname;
+    var dataKeyB = props.b;
+    var nameB = props.bname;
+    var chartwidth = props.cw;
+    var chartheight = props.ch;
     return (
       <div className='Chart'>
         <LineChart 
-          width={1500} 
-          height={800} 
+          width={chartwidth} 
+          height={chartheight} 
           data={props.data}
           margin={{top: 45, bottom: 45, right: 20, left: 20}}
         >
@@ -33,7 +38,7 @@ const Chart = props => {
               }}
               angle={270} 
               position="insideLeft"
-              value={"Power Consumption (KWH)"} />
+              value={nameA} />
           </YAxis>
           <YAxis yAxisId="right" orientation="right"  >
           <Label
@@ -44,13 +49,13 @@ const Chart = props => {
               }}
               angle={90} 
               position="insideRight"
-              value={"Water Production (L/S)"} />
+              value={nameB} />
           </YAxis>
           <CartesianGrid strokeDasharray="3 3" fill="black"/>
           <Tooltip/>
           <Legend />
-          <Line yAxisId="left" type="monotone" dataKey="powerConsumption" stroke={Colors.fpink} activeDot={{r: 8}}/>
-          <Line yAxisId="right" type="monotone" dataKey="waterProduction" stroke={Colors.flightblue} activeDot={{r: 8}}/>
+          <Line yAxisId="left" type="monotone" dataKey= {dataKeyA} stroke={Colors.fpink} activeDot={{r: 8}}/>
+          <Line yAxisId="right" type="monotone" dataKey= {dataKeyB} stroke={Colors.flightblue} activeDot={{r: 8}}/>
         </LineChart>
       </div>
     );

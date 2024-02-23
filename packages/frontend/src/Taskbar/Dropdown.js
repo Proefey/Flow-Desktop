@@ -28,12 +28,14 @@ const Dropdown = (props) => {
         .then((json) => {
             setOptions(json["machineName"]);
             setMID(json["machineID"]);
+            props.changeOptions(json["machineName"]);
+            props.changeMID(json["machineID"]);
           })
         .catch((error) => {
             console.log(error);
             setOptions(null); // To indicate API call failed
         });
-}, [UID, addHeader, fetchData]);
+}, []);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -52,14 +54,11 @@ const Dropdown = (props) => {
       target = 0;
       setDeleted(false);
     }
-    console.info(isDeleted);
-    console.info("HELP" + index);
   };
 
   const delay = ms => new Promise(res => setTimeout(res, ms));
 
   const handleDeleteOption = async (index) => {
-    console.info("ToDelete" + index);
     const DeleteMID = MID[index];
     const DeleteMNAME = options[index];
     try {
@@ -78,6 +77,8 @@ const Dropdown = (props) => {
         .then((json) => {
             setOptions(json["machineName"]);
             setMID(json["machineID"]);
+            props.changeOptions(json["machineName"]);
+            props.changeMID(json["machineID"]);
           })
         .catch((error) => {
             console.log(error);

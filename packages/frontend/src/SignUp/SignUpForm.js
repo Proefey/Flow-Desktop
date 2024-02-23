@@ -44,7 +44,7 @@ function SignupForm(props) {
                 if (res.status === 201) {
                     res.json().then((payload) => {
                         props.signupUser(payload);
-                        navigate("/month");
+                        navigate("/Overview");
                     });
                 } else if (res.status === 409) {
                     setErrorMessage("Username already taken.");

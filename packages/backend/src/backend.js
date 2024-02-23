@@ -95,6 +95,20 @@ app.get("/data/:id", authenticateUser, (req, res) => {
         });
 });
 
+app.get("/data/multi/:ids", authenticateUser, (req, res) => {
+    const MIDs = req.params.ids;
+    var myArray = MIDs.split("-");
+    for(var i=0; i<myArray.length; i++) { myArray[i] = parseInt(myArray[i], 10); } 
+    Services.getData(myArray)
+        .then((data) => {
+            data = { data: data };
+            res.send(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
 app.get("/", (req, res) => {
     const MID = 2;
     Services.getData(MID)

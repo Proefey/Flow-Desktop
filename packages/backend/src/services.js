@@ -83,6 +83,16 @@ function getData(id){
     return promise;
 }
 
+function getMultiData(ids){
+    let promise;
+    if(ids){
+        promise = dataPackModel.find({machineID: { $in : ids}});
+    } else{
+        promise = dataPackModel.find();
+    }
+    return promise;
+}
+
 /*Helper Function For addData*/
 function sameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&
@@ -100,4 +110,5 @@ export default {
     editUser,
     deleteMachine,
     getData,
+    getMultiData
 };
