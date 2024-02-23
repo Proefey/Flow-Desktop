@@ -170,6 +170,11 @@ const Overview = props => {
       return;
     };
 
+  function sortByDate(jsonList) {
+  // Assuming each JSON object has a 'date' property
+  return jsonList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  }
+
   useEffect(() => {
       function fetchData() {
           //const promise = fetch(Backend_URL + `/data/` + target, {
@@ -180,7 +185,10 @@ const Overview = props => {
       }
       fetchData()
           .then((res) => res.json())
-          .then((json) => setData(json["data"]))
+          .then((json) => {
+            var jsondata = json["data"];
+            setData(sortByDate(jsondata));
+          })
           .catch((error) => {
               console.log(error);
               setData(null); // To indicate API call failed
@@ -244,7 +252,9 @@ const Overview = props => {
 		for(var x = 0; x < DateArray2d.length; x++){
 			for(var y = 0; y < DateArray2d[x].length; y++){
 				var temp_date = new Date(DateArray2d[x][y]['timestamp']);
-      			if(temp_date < new Date()) lastEntry[MID.indexOf(DateArray2d[x][y]['machineID'])] = DateArray2d[x][y];
+      	if(temp_date < new Date()) {
+          lastEntry[MID.indexOf(DateArray2d[x][y]['machineID'])] = DateArray2d[x][y];
+        }
 			}
 		}
 	    for(var j = 0; j < days.length; j++){

@@ -25,7 +25,6 @@ const MachineState = props => {
   var vw = props.vw;
   var vh = props.vh;
   if(entry && entry !== null) var TD = calculateTimeDifference(entry['timestamp']);
-  console.info(TD);
   return (
     <div style = {{
       position: 'absolute', 
