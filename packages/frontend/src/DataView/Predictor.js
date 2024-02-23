@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import { useParams} from 'react-router-dom';
 import Triangle from "@react-native-toolkit/triangle";
 import Colors from "../Const/Colors";
 import {Backend_URL} from "../Const/Urls";
@@ -18,7 +17,6 @@ const Predictor = props => {
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
   const [data, setData] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
-  const [forecastData, setForecastData] = useState([]);
   const [select1, set1] = useState(0);
   const [select2, set2] = useState(2);
   const [timeframe, setTimeframe] = useState(0);
@@ -142,10 +140,6 @@ const Predictor = props => {
       		.then((res) => res.json())
       		.then((json) => setHourlyData(json["properties"]["periods"]))
       		.catch((error) => console.log(error));
-    	fetchWeatherData(json["properties"]["forecast"])
-      		.then((res) => res.json())
-      		.then((json) => setForecastData(json["properties"]["periods"]))
-      		.catch((error) => console.log(error));
       	})
     .catch((error) => {
       console.log(error);
@@ -215,13 +209,13 @@ const Predictor = props => {
 	futurehumidity[i] = hourlyData[i]["relativeHumidity"]["value"];
 	futuretemp[i] = hourlyData[i]["temperature"];
   }
-  if(select2 == 2){
+  if(select2 === 2){
 	var futurewater = predictValues(datahumidity, datawater, futurehumidity);
 	var futurepower = predictValues(datahumidity, datapower, futurehumidity);
   }
   else{
-  	var futurewater = predictValues(datatemp, datawater, futuretemp);
-	var futurepower = predictValues(datatemp, datapower, futuretemp);
+  futurewater = predictValues(datatemp, datawater, futuretemp);
+	futurepower = predictValues(datatemp, datapower, futuretemp);
   }
   var DateArray2d = groupDatesByDay()
   if(timeframe === 0){
@@ -236,13 +230,13 @@ const Predictor = props => {
 	  }
   }
   else{
-  	var count = 0;
+  	count = 0;
   	for(i = 0; i < DateArray2d.length; i++){
   		var temp_water = 0;
   		var temp_power = 0;
   		var temp_humidity = 0;
   		var temp_temp = 0;
-  		var chartdata = {}
+  		chartdata = {}
   		chartdata["date"] = DateArray2d[i][0];
   		for(var j = 0; j < DateArray2d[i].length; j++){
   			temp_water += futurewater[count];

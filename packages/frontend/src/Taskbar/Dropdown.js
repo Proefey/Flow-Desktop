@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Colors from '../Const/Colors';
 import { Link} from "react-router-dom";
 import {Backend_URL} from "../Const/Urls";
@@ -10,17 +10,20 @@ const Dropdown = (props) => {
   const [options, setOptions] = useState([]);
   const [MID, setMID] = useState([]);
   const [displayName, setDisplayName] = useState("Machine ID");
+  const changeOptions = props.changeOptions;
+  const changeMID = props.changeMID;
+
 
   const addHeader = props.addHeader;
   const UID = props.UID;
   var target = 0;
 
-  const fetchData = useCallback(() => {
+  function fetchData() {
     const promise = fetch(Backend_URL + `/users/` + UID, {
     headers: addHeader()
     });
     return promise;
-  }, [UID, addHeader]); 
+  }; 
 
   useEffect(() => {
     fetchData()
@@ -28,14 +31,14 @@ const Dropdown = (props) => {
         .then((json) => {
             setOptions(json["machineName"]);
             setMID(json["machineID"]);
-            props.changeOptions(json["machineName"]);
-            props.changeMID(json["machineID"]);
+            changeOptions(json["machineName"]);
+            changeMID(json["machineID"]);
           })
         .catch((error) => {
             console.log(error);
             setOptions(null); // To indicate API call failed
         });
-}, []);
+}, [changeMID, changeOptions]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

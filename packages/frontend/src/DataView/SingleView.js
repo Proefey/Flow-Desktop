@@ -285,7 +285,7 @@ const SingleView = props => {
         }
       }
       else{
-        for(var i = 0; i < date_entries.length; i++){
+        for(i = 0; i < date_entries.length; i++){
           if(date_entries[i]['machineID'] === target){
             total_power += date_entries[i]['power'];
             total_water += date_entries[i]['waterproduced'];
@@ -302,7 +302,7 @@ const SingleView = props => {
             displayCount += 1;
           }
         }      
-        var chartdata = {};
+        chartdata = {};
         chartdata["date"] = days[j].toString();
         chartdata["powerConsumption"] = total_power;
         chartdata["waterProduction"] = total_water;

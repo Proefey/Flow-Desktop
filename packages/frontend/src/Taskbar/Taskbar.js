@@ -1,23 +1,11 @@
 import React, {useState, useEffect} from "react";
 import Colors from "../Const/Colors"
 import Triangle from "@react-native-toolkit/triangle";
-import { useParams, Link } from 'react-router-dom';
+import {Link } from 'react-router-dom';
 import Dropdown from './Dropdown';
 import {Backend_URL} from "../Const/Urls";
 
 const Taskbar = props => {
-
-  //Convert Date to String For Linking
-  function linkString(linkDate){
-    const linkYear = linkDate.getFullYear();
-    const linkMonth = linkDate.getMonth() + 1;
-    const linkDay = linkDate.getDate();
-    return linkYear + "-" + linkMonth + "-" + linkDay;
-  }  
-
-  let params = useParams();
-  var pstDate = params['newdate'] + " PST";
-  var date = new Date(pstDate)
   var [name, setName] = useState("");
 
   const addHeader = props.addHeader;

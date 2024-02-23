@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Tooltip, Legend, Cell, Text } from 'recharts';
+import { PieChart, Pie, Tooltip, Legend, Cell } from 'recharts';
 
 const PiChart = props => {
   var chartwidth = props.cw;

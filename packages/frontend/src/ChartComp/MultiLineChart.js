@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Colors from '../Const/Colors';
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer} from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid} from 'recharts';
 
 const MultiLineChart = props => {
   const data = props.data;

@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import { useParams} from 'react-router-dom';
 import Triangle from "@react-native-toolkit/triangle";
 import Colors from "../Const/Colors";
 import {Backend_URL} from "../Const/Urls";
@@ -190,8 +189,6 @@ const Overview = props => {
 
   //Constants
   const [data, setData] = useState([]);
-  //Handle Buttons To Change Chart
-  const [selectedButtons, setSelectedButtons] = useState([]);
 
   //Day = 0, Week = 1, Month = 2, Custom = 3
   const [timeframe, setTimeframe] = useState(0);
@@ -205,7 +202,7 @@ const Overview = props => {
   var [days, setDays] = useState([new Date()]);
 
   //Const Chart Variables
-  const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
+  //const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
   var chartColors = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -260,7 +257,7 @@ const Overview = props => {
       		}	
 	  	}
 	}
-	for (var i = 0; i < MID.length; i++){
+	for (i = 0; i < MID.length; i++){
 		numArray[i] = i;
 		var chartdata = {};
 		var chartdata2 = {};

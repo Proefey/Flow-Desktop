@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import Dial from "../DialComp/Dial";
 import {Backend_URL} from "../Const/Urls";
 import MultiLineChart from "../ChartComp/MultiLineChart";
 import Triangle from "@react-native-toolkit/triangle";
@@ -270,7 +269,7 @@ const MultiView = props => {
         var total_humidity = 0;
         var total_temp = 0;
         var total_tds = 0;
-        for(var i = 0; i < date_entries.length; i++){
+        for(i = 0; i < date_entries.length; i++){
           var chartdata = {};
           chartdata["date"] = date_entries[i]['timestamp'].toString();
           chartdata["powerConsumption"] = date_entries[i]['power'];
@@ -285,14 +284,14 @@ const MultiView = props => {
         }
       }
       else{
-        var data_num = new Array(MID.length).fill(0);
-        var total_power = new Array(MID.length).fill(0);
-        var total_water = new Array(MID.length).fill(0);
-        var total_humidity = new Array(MID.length).fill(0);
-        var total_temp = new Array(MID.length).fill(0);
-        var total_tds = new Array(MID.length).fill(0);
+        data_num = new Array(MID.length).fill(0);
+        total_power = new Array(MID.length).fill(0);
+        total_water = new Array(MID.length).fill(0);
+        total_humidity = new Array(MID.length).fill(0);
+        total_temp = new Array(MID.length).fill(0);
+        total_tds = new Array(MID.length).fill(0);
 
-        for(var i = 0; i < date_entries.length; i++){
+        for(i = 0; i < date_entries.length; i++){
           var target_index = MID.indexOf(date_entries[i]['machineID']);
           total_power[target_index] += date_entries[i]['power'];
           total_water[target_index] += date_entries[i]['waterproduced'];
@@ -303,8 +302,8 @@ const MultiView = props => {
           piChartWater[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['waterproduced'];
           piChartPower[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['power'];
         }     
-        for(var i = 0; i < MID.length; i++){
-          var chartdata = {};
+        for(i = 0; i < MID.length; i++){
+          chartdata = {};
           chartdata["date"] = days[j].toString();
           chartdata["powerConsumption"] = total_power[i];
           chartdata["waterProduction"] = total_water[i];
@@ -324,15 +323,15 @@ const MultiView = props => {
     }
   }
   var newarray = [];
-  for(var i = 0; i < MID.length; i++){
+  for(i = 0; i < MID.length; i++){
     var newdata = {};
     newdata["key"] = options[i];
     newdata["data"] = chartarr[i];
     newarray.push(newdata);
   }
 
-  for (var i = 0; i < MID.length; i++){
-    var chartdata = {};
+  for (i = 0; i < MID.length; i++){
+    chartdata = {};
     var chartdata2 = {};
     chartdata["name"] = options[i];
     chartdata["value"] = piChartWater[i];

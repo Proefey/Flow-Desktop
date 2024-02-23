@@ -1,7 +1,5 @@
 import React, {useState} from "react";
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
-import CalMonth from "./Calendar/CalMonth";
-import CalWeek from "./Calendar/CalWeek";
 import Taskbar from "./Taskbar/Taskbar";
 import Login from "./Login/Login.js";
 import Signup from "./SignUp/SignUp.js";
@@ -11,10 +9,6 @@ import Predictor from "./DataView/Predictor";
 import Overview from "./DataView/Overview";
 import MultiView from "./DataView/MultiView";
 
-const curdate = new Date();
-const curyear = curdate.getFullYear();
-const curmonth = curdate.getMonth() + 1;
-const curday = curdate.getDate();
 function MyApp() {
   const INVALID_TOKEN = "INVALID_TOKEN";
   const [token, setToken] = useState(INVALID_TOKEN);
