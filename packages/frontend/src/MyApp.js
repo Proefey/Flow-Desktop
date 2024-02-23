@@ -16,7 +16,6 @@ function MyApp() {
   const [Target, changeTarget] = useState("0");
   const [options, changeOptions] = useState([]);
   const [MID, changeMID] = useState([]);
-  console.info(options);
 
   function addAuthHeader(otherHeaders = {}) {
       if (token === INVALID_TOKEN) {

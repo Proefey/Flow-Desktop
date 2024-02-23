@@ -203,12 +203,12 @@ const SingleView = props => {
               console.log(error);
               setData(null); // To indicate API call failed
           });
-    }, [target, MID]);
+    }, [target, MID, MIDLink, addHeader]);
 
   //Constants
   const [data, setData] = useState([]);
   //Handle Buttons To Change Chart
-  const [selectedButtons, setSelectedButtons] = useState([]);
+  const [selectedButtons, setSelectedButtons] = useState([0, 1]);
 
   //Day = 0, Week = 1, Month = 2, Custom = 3
   const [timeframe, setTimeframe] = useState(0);
@@ -219,7 +219,7 @@ const SingleView = props => {
   var month = date.getMonth();
   var year = date.getFullYear();
   var dayDate = date.getDate();
-  var [days, setDays] = useState([]);
+  var [days, setDays] = useState([new Date()]);
 
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];

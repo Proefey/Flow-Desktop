@@ -185,7 +185,7 @@ const Overview = props => {
               console.log(error);
               setData(null); // To indicate API call failed
           });
-    }, [target, MID]);
+    }, [target, MID, MIDLink, addHeader]);
 
   //Constants
   const [data, setData] = useState([]);

@@ -197,12 +197,12 @@ const MultiView = props => {
               console.log(error);
               setData(null); // To indicate API call failed
           });
-    }, [target, MID]);
+    }, [target, MID, MIDLink, addHeader]);
 
   //Constants
   const [data, setData] = useState([]);
   //Handle Buttons To Change Chart
-  const [selectedButtons, setSelectedButtons] = useState([]);
+  const [selectedButtons, setSelectedButtons] = useState([0]);
 
   //Day = 0, Week = 1, Month = 2, Custom = 3
   const [timeframe, setTimeframe] = useState(0);

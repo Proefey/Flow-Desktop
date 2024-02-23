@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import Triangle from "@react-native-toolkit/triangle";
 import Colors from "../Const/Colors";
 import {Backend_URL} from "../Const/Urls";
@@ -43,7 +43,7 @@ const Predictor = props => {
               console.log(error);
               setData(null); // To indicate API call failed
           });
-    }, [target, MID]);
+    }, [target, MID, MIDLink, addHeader]);
 
 
   function getUserCoordinates () {
@@ -65,13 +65,13 @@ const Predictor = props => {
     }
   };
 
-  function checkUserCoordinates() {
+  const checkUserCoordinates = useCallback(() => {
     if (manualLatitude && manualLongitude) {
       setUserCoordinates({ latitude: parseFloat(manualLatitude), longitude: parseFloat(manualLongitude) });
     } else {
       getUserCoordinates();
     }
-  };
+  }, [manualLatitude, manualLongitude]);
 
   function resetToNavigatorCoordinates() {
     getUserCoordinates();
@@ -131,21 +131,6 @@ const Predictor = props => {
     return promise;
   }
 
-
-  function fetchWeather(link){
-  	fetchWeatherData(link)
-    .then((res) => res.json())
-    .then((json) => {
-    	fetchWeatherData(json["properties"]["forecastHourly"])
-      		.then((res) => res.json())
-      		.then((json) => setHourlyData(json["properties"]["periods"]))
-      		.catch((error) => console.log(error));
-      	})
-    .catch((error) => {
-      console.log(error);
-  });
-  }
-
   function groupDatesByDay() {
     // Create an object to store dates grouped by day
     const groupedDates = {};
@@ -174,9 +159,22 @@ const Predictor = props => {
   // Trigger the check when the component mounts
   useEffect(() => {
   	checkUserCoordinates();
-  }, []);
+  }, [checkUserCoordinates]);
 
   useEffect(() => {
+    function fetchWeather(link){
+    fetchWeatherData(link)
+    .then((res) => res.json())
+    .then((json) => {
+      fetchWeatherData(json["properties"]["forecastHourly"])
+          .then((res) => res.json())
+          .then((json) => setHourlyData(json["properties"]["periods"]))
+          .catch((error) => console.log(error));
+        })
+    .catch((error) => {
+      console.log(error);
+    });
+    }
   	if(userCoordinates != null){
 		var newlink = "https://api.weather.gov/points/" + userCoordinates["latitude"] + "," + userCoordinates["longitude"];
 		console.info(newlink);

@@ -38,6 +38,7 @@ const Dropdown = (props) => {
             console.log(error);
             setOptions(null); // To indicate API call failed
         });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [changeMID, changeOptions]);
 
   const toggleDropdown = () => {
