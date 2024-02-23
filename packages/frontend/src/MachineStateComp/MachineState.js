@@ -81,7 +81,7 @@ const MachineState = props => {
           <Dial
             title = 'Water Level'
             value = {entry && entry !== null && entry["waterlevel"]}
-            unit = 'ppm'
+            unit = 'm'
             min={0}
             max={10}
             size={150}
