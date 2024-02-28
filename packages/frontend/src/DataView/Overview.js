@@ -281,6 +281,10 @@ const Overview = props => {
 		chartdata2["color"] = chartColors[i % chartColors.length];
 		powerChart.push(chartdata2);
 	}
+
+  const staticwidth = window.innerWidth;
+  const staticheight = window.innerWidth;
+
   return (
     <div>
     <style>{'body { background-color: #000000; }'}</style> 
@@ -291,8 +295,8 @@ const Overview = props => {
       }}>
         <PiChart
         data = {waterChart}
-        cw = {400}
-        ch = {400}
+        cw = {staticwidth/4}
+        ch = {staticheight/4.5}
         Legend = {false}
         name = {axisNames[1]}
         />
@@ -304,8 +308,8 @@ const Overview = props => {
       }}>
         <PiChart
         data = {powerChart}
-        cw = {400}
-        ch = {400}
+        cw = {staticwidth/4}
+        ch = {staticheight/4.5}
         Legend = {true}
         name = {axisNames[0]}
         />
@@ -315,9 +319,9 @@ const Overview = props => {
         key = {num}
         name = {options[num]}
         entry = {lastEntry[num]}
-        width = {300}
-        height = {600}
-        vw = {20 + 16 * num}
+        width = {'16vw'}
+        height = {'67vh'}
+        vw = {25 + 18 * num}
         vh = {15}
 
       />)}

@@ -205,8 +205,8 @@ const SingleView = props => {
           });
     }, [target, MID, MIDLink, addHeader]);
 
-  //Constants
   const [data, setData] = useState([]);
+
   //Handle Buttons To Change Chart
   const [selectedButtons, setSelectedButtons] = useState([0, 1]);
 
@@ -224,6 +224,7 @@ const SingleView = props => {
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
+  const highest = [300, 1, 100, 130, 1000];
 
   //Leap Year Calculation
   if(year % 4 === 0){
@@ -329,8 +330,10 @@ const SingleView = props => {
         front = {false}
         a = {dataNames[selectedButtons[0]]}
         aname = {axisNames[selectedButtons[0]]}
+        amax = {highest[selectedButtons[0]]}
         b = {dataNames[selectedButtons[1]]}
         bname = {axisNames[selectedButtons[1]]}
+        bmax = {highest[selectedButtons[1]]}
         cw = {1200}
         ch = {700}
         />

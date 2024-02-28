@@ -24,6 +24,8 @@ const MachineState = props => {
   var height = props.height;
   var vw = props.vw;
   var vh = props.vh;
+  const staticwidth = window.innerWidth;
+  const staticheight = window.innerWidth;
   if(entry && entry !== null) var TD = calculateTimeDifference(entry['timestamp']);
   return (
     <div style = {{
@@ -38,37 +40,37 @@ const MachineState = props => {
         }}
       >
       <h3 style={{ 
-        fontsize: 40, 
+        fontsize: '2vw', 
         textAlign: 'center', 
         color: 'white' 
       }}>
       {name}
       </h3>
       <p style={{ 
-        fontsize: 40, 
+        fontsize: '2vw', 
         textAlign: 'center', 
         color: 'white' 
       }}>
       Last Updated: <br />
-      Years: {entry && entry !== null && TD.years > 0 && TD.years} <br/>
-      Months: {entry && entry !== null && TD.months > 0 && TD.months} <br />
-      Days: {entry && entry !== null && TD.days > 0 && TD.days} <br />
-      Hours: {entry && entry !== null && TD.hours > 0 && TD.hours} <br />
-      Minutes: {entry && entry !== null && TD.minutes > 0 && TD.minutes} <br />
+      {entry && entry !== null && TD.years > 0 && <> Years: {TD.years} <br/> </>}
+      {entry && entry !== null && TD.months > 0 && <> Months: {TD.months} <br/> </>}
+      {entry && entry !== null && TD.days > 0 && <> Days: {TD.days} <br/> </>}
+      {entry && entry !== null && TD.hours > 0 && <> Hours: {TD.hours} <br/> </>}
+      {entry && entry !== null && TD.minutes > 0 &&  <> Minutes: {TD.minutes} <br/> </>}
       </p>
       </div>
 
       <div 
       style = {{
         position: 'absolute',
-        transform: `translate(${4}vw, ${-vh - 25}vh)`}}>
+        transform: `translate(${3}vw, ${-45}vh)`}}>
           <Dial
             title = 'Total Disolved Solid'
             value = {entry && entry !== null && entry["tds"]}
             unit = 'ppm'
             min={0}
             max={10000}
-            size={150}
+            size={staticwidth / 24 + staticheight / 18}
             threshold={0.15}
             errorThreshold={0.05}
           />       
@@ -77,14 +79,14 @@ const MachineState = props => {
       <div 
       style = {{
         position: 'absolute',
-        transform: `translate(${4}vw, ${-vh - 5}vh)`}}>
+        transform: `translate(${3}vw, ${-25}vh)`}}>
           <Dial
             title = 'Water Level'
             value = {entry && entry !== null && entry["waterlevel"]}
             unit = 'm'
             min={0}
             max={10}
-            size={150}
+            size={staticwidth / 24 + staticheight / 18}
             threshold={0.15}
             errorThreshold={0.05}
           />       

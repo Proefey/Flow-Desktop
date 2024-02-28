@@ -37,7 +37,6 @@ const MultiLineChart = props => {
     setAllLinesVisible(true);
   };
 
-  data.map((line, index) => console.info(line));
   return (
     <div>
         <LineChart 
@@ -50,7 +49,7 @@ const MultiLineChart = props => {
           dataKey="date" 
           allowDuplicatedCategory={false}
           />
-          <YAxis />
+          <YAxis domain={[0, props.amax]}/>
           <Tooltip />
           <Legend />
           {data.map((line, index) => ( visibleLines.includes(line.key) &&

@@ -27,18 +27,16 @@ const Taskbar = props => {
         });
   }, [UID, addHeader]);
 
-  const topheight = 120;
-  const topwidth = window.innerWidth;
   return(
       <div>
         <div
         style = {{
-          transform: `translate(${0}px, ${10}px)`,
+          transform: `translate(${0}vw, ${1}vh)`,
           position:'absolute',
           background: Colors.fblue,
           opacity: 0.5,
-          width: topwidth,
-          height: topheight - 20,
+          width: '100vw',
+          height: '11vh',
           border: 'none',
         }}
 
@@ -46,11 +44,11 @@ const Taskbar = props => {
 
         <div
         style = {{
-          transform: `translate(${0}px, ${0}px)`,
+          transform: `translate(${0}vw, ${0}vh)`,
           position:'absolute',
           opacity: 1,
-          width: topwidth,
-          height: topheight,
+          width: '100vw',
+          height: '13vh',
           border: 'none',
           borderBottom: 'solid',
           borderTop: 'solid',
@@ -60,32 +58,32 @@ const Taskbar = props => {
 
         <div style ={{
           position: 'absolute',
-          transform: `translate(${topwidth / 2 - 240}px, ${0}px)`
+          transform: `translate(${37}vw, ${0}vh)`
         }}>
-          <Triangle mode={"left"} base={topheight} color={"black"}/>
+          <Triangle mode={"left"} base={120} color={"black"}/>
         </div>
 
         <div style ={{
           position: 'absolute',
-          transform: `translate(${topwidth / 2 + 140}px, ${0}px)`
+          transform: `translate(${58}vw, ${0}vh)`
         }}>
-          <Triangle mode={"right"} base={topheight} color={"black"}/>
+          <Triangle mode={"right"} base={120} color={"black"}/>
         </div>
 
         <div
         style = {{
-          transform: `translate(${topwidth / 2 - 150}px, ${0}px)`,
+          transform: `translate(${42}vw, ${0}vh)`,
           position:'absolute',
           backgroundColor: 'black',
           opacity: 1,
-          width: 300,
-          height: topheight,
+          width: '16vw',
+          height: '13vh',
         }}
         >
         <p 
         align = 'center'
         style = {{
-          fontSize: 40,
+          fontSize: '2vw',
           fontWeight: 'bold',
           color: Colors.flightblue,
         }}>
@@ -99,7 +97,7 @@ const Taskbar = props => {
         <button style = {{
           background: Colors.fdarkblue, 
           position: 'absolute', 
-          transform: `translate(${24}vw, ${topheight / 4}px)`,
+          transform: `translate(${24}vw, ${3}vh)`,
           width: '10vw',
           height: '6vh',
           fontSize: 20
@@ -114,7 +112,7 @@ const Taskbar = props => {
         <button style = {{
           background: Colors.fdarkblue, 
           position: 'absolute', 
-          transform: `translate(${63}vw, ${topheight / 4}px)`,
+          transform: `translate(${63}vw, ${3}vh)`,
           width: '10vw',
           height: '6vh',
           fontSize: 20
@@ -129,7 +127,7 @@ const Taskbar = props => {
         <button style = {{
           background: Colors.fdarkblue, 
           position: 'absolute', 
-          transform: `translate(${75}vw, ${topheight / 4}px)`,
+          transform: `translate(${75}vw, ${3}vh)`,
           width: '10vw',
           height: '6vh',
           fontSize: 20
@@ -144,7 +142,7 @@ const Taskbar = props => {
         <button style = {{
           background: Colors.fdarkblue, 
           position: 'absolute', 
-          transform: `translate(${87}vw, ${topheight / 4}px)`,
+          transform: `translate(${87}vw, ${3}vh)`,
           width: '10vw',
           height: '6vh',
           fontSize: 20

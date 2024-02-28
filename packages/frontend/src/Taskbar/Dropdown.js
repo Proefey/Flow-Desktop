@@ -65,6 +65,7 @@ const Dropdown = (props) => {
   const handleDeleteOption = async (index) => {
     const DeleteMID = MID[index];
     const DeleteMNAME = options[index];
+    console.info(index);
     try {
         await fetch(
         Backend_URL  + `/users/` + props.UID + '/' + DeleteMNAME + '/' + DeleteMID,
@@ -105,7 +106,7 @@ const Dropdown = (props) => {
     <div
       style={{
         position: 'absolute',
-        transform: `translate(${100}px, ${30}px)`
+        transform: `translate(${2}vw, ${3}vh)`
       }}
     >
       <div
@@ -118,6 +119,7 @@ const Dropdown = (props) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          width: '20vw'
         }}
         onClick={toggleDropdown}
       >
@@ -137,7 +139,7 @@ const Dropdown = (props) => {
             position: 'absolute',
             top: '100%',
             left: '0',
-            width: '200px',
+            width: '20vw',
             backgroundColor: 'black',
             border: '1px solid #ccc',
             boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
@@ -154,7 +156,7 @@ const Dropdown = (props) => {
             {/* Dynamically generate list items from the options array */}
             {options.map((option, index) => (
               <li
-                key={index}
+                key={index + 2}
                 style={{
                   padding: '10px',
                   cursor: 'pointer',

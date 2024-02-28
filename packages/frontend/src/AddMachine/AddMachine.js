@@ -64,7 +64,7 @@ const AddMachine = (props) => {
           return;
       }
       handleSubmit();
-      navigate("/month")
+      navigate("/overview")
   }
 
   const handleSubmit = async () => {
@@ -122,7 +122,7 @@ const AddMachine = (props) => {
           <br />
           <button onClick={onsave}>Submit</button>
         </form>
-        <button onClick={() => navigate("/month")}>Back</button>
+        <button onClick={() => navigate("/overview")}>Back</button>
         </div>
       </div>
     </div>

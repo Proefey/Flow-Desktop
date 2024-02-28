@@ -20,6 +20,8 @@ const Chart = props => {
     var nameB = props.bname;
     var chartwidth = props.cw;
     var chartheight = props.ch;
+    var maxA = props.amax;
+    var maxB = props.bmax;
     return (
       <div className='Chart'>
         <LineChart 
@@ -29,7 +31,7 @@ const Chart = props => {
           margin={{top: 45, bottom: 45, right: 20, left: 20}}
         >
           <XAxis dataKey="date" />
-          <YAxis yAxisId="left">
+          <YAxis yAxisId="left" domain={[0, maxA]}>
           <Label
              style={{
                  textAnchor: "middle",
@@ -40,7 +42,7 @@ const Chart = props => {
               position="insideLeft"
               value={nameA} />
           </YAxis>
-          <YAxis yAxisId="right" orientation="right"  >
+          <YAxis yAxisId="right" orientation="right" domain={[0, maxB]} >
           <Label
              style={{
                  textAnchor: "middle",

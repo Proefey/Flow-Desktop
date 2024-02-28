@@ -15,6 +15,7 @@ const Predictor = props => {
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
+  const highest = [300, 1, 100, 130, 1000];
   const [data, setData] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
   const [select1, set1] = useState(0);
@@ -253,6 +254,9 @@ const Predictor = props => {
   total_water = futurewater.reduce((a, b) => a + b, 0);
   total_power = futurepower.reduce((a, b) => a + b, 0);
 
+  const staticwidth = window.innerWidth;
+  const staticheight = window.innerWidth;
+
   return(
   	<div>
   	<style>{'body { background-color: #000000; }'}</style> 
@@ -266,10 +270,12 @@ const Predictor = props => {
         front = {false}
         a = {dataNames[select2]}
         aname = {axisNames[select2]}
+        amax = {highest[select2]}
         b = {dataNames[select1]}
         bname = {axisNames[select1]}
-        cw = {1200}
-        ch = {700}
+        bmax = {highest[select1]}
+        cw = {staticwidth * 70 / 100}
+        ch = {staticheight * 37 / 100}
         />
       </div>
 
@@ -283,7 +289,7 @@ const Predictor = props => {
             unit = 'L'
             min={0}
             max={10000}
-            size={250}
+            size={staticwidth / 18 + staticheight / 12}
             threshold={0.15}
             errorThreshold={0.05}
           />      
@@ -299,7 +305,7 @@ const Predictor = props => {
             unit = 'KWH'
             min={0}
             max={100000}
-            size={250}
+            size={staticwidth / 18 + staticheight / 12}
             threshold={0.15}
             errorThreshold={0.05}
           />      
