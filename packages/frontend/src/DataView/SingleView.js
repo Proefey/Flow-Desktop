@@ -224,7 +224,7 @@ const SingleView = props => {
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
-  const highest = [300, 1, 100, 130, 1000];
+  const highest = [20, 1, 100, 130, 1000];
 
   //Leap Year Calculation
   if(year % 4 === 0){
@@ -348,7 +348,7 @@ const SingleView = props => {
             value = {displayWater}
             unit = 'L'
             min={0}
-            max={10}
+            max={30 * days.length}
             size={225}
             threshold={0.15}
             errorThreshold={0.05}
@@ -364,7 +364,7 @@ const SingleView = props => {
             value = {displayPower}
             unit = 'KWH'
             min={0}
-            max={500}
+            max={12 * days.length}
             size={225}
             threshold={0.15}
             errorThreshold={0.05}
@@ -412,7 +412,7 @@ const SingleView = props => {
             value = {displayTDS}
             unit = 'ppm'
             min={0}
-            max={10000}
+            max={1000}
             size={175}
             threshold={0.15}
             errorThreshold={0.05}

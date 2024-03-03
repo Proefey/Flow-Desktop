@@ -177,6 +177,7 @@ const Overview = props => {
 
   useEffect(() => {
       function fetchData() {
+          console.info(MIDLink);
           //const promise = fetch(Backend_URL + `/data/` + target, {
           const promise = fetch(Backend_URL + `/data/multi/` + MIDLink , {
               headers: addHeader()
@@ -287,7 +288,8 @@ const Overview = props => {
 
   return (
     <div>
-    <style>{'body { background-color: #000000; }'}</style> 
+    <style>{'body { background-color: #000000; transform: scale(1, 1); }'
+  }</style> 
 
       <div style = {{
         position: 'absolute', 

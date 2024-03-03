@@ -15,7 +15,7 @@ const Predictor = props => {
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
-  const highest = [300, 1, 100, 130, 1000];
+  const highest = [20, 1, 100, 130, 1000];
   const [data, setData] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
   const [select1, set1] = useState(0);
@@ -288,7 +288,7 @@ const Predictor = props => {
             value = {total_water}
             unit = 'L'
             min={0}
-            max={10000}
+            max={30 * 7}
             size={staticwidth / 18 + staticheight / 12}
             threshold={0.15}
             errorThreshold={0.05}
@@ -304,7 +304,7 @@ const Predictor = props => {
             value = {total_power}
             unit = 'KWH'
             min={0}
-            max={100000}
+            max={12 * 7}
             size={staticwidth / 18 + staticheight / 12}
             threshold={0.15}
             errorThreshold={0.05}
