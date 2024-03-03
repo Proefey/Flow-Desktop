@@ -8,8 +8,9 @@ const port = 8080;
 const APP_VERSION = "1.0.0";
 
 var corsOptions = {
-  origin: true,
-  credentials:true
+    origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
 };
 
 app.use(cors(corsOptions));
