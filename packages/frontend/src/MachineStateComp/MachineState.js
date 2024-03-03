@@ -14,8 +14,9 @@ const MachineState = props => {
     const days = Math.floor((timeDifference % (30.44 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
     const hours = Math.floor((timeDifference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
     const minutes = Math.floor((timeDifference % (60 * 60 * 1000)) / (60 * 1000));
+    const seconds = Math.floor((timeDifference % (60 * 1000)) / (1000));
 
-    return { years, months, days, hours, minutes };
+    return { years, months, days, hours, minutes, seconds};
   };
 
   var name = props.name;
@@ -57,6 +58,7 @@ const MachineState = props => {
       {entry && entry !== null && TD.days > 0 && <> Days: {TD.days} <br/> </>}
       {entry && entry !== null && TD.hours > 0 && <> Hours: {TD.hours} <br/> </>}
       {entry && entry !== null && TD.minutes > 0 &&  <> Minutes: {TD.minutes} <br/> </>}
+      {entry && entry !== null && TD.seconds > 0 &&  <> Seconds: {TD.seconds} <br/> </>}
       </p>
       </div>
 
