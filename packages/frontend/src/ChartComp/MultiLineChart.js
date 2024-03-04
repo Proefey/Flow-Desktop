@@ -7,7 +7,7 @@ const MultiLineChart = props => {
   const [visibleLines, setVisibleLines] = useState(data.map((line) => line.key));
   const [allLinesVisible, setAllLinesVisible] = useState(true);
 
-  const colors = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+  const colors = ['red', '#FF33FF', 'cyan', '#68eb38', '#00B3E6', 
       '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
       '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
       '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
@@ -50,7 +50,7 @@ const MultiLineChart = props => {
           allowDuplicatedCategory={false}
           />
           <YAxis domain={[0, props.amax]}/>
-          <Tooltip />
+          <Tooltip/>
           <Legend />
           {data.map((line, index) => ( visibleLines.includes(line.key) &&
             <Line
