@@ -189,12 +189,16 @@ const Predictor = props => {
   var datahumidity = [];
   var datatemp = [];
   var count = 0;
-  //var previousWater = 0;
-  //var previousPower = 0;
-  for(var i = 0; i < data.length; i++){
+  var diffWater = 0;
+  var diffPower = 0;
+  for(var i = 1; i < data.length; i++){
   	if(data[i]['machineID'] === target){
-  		datawater[count] = data[i]['waterproduced'];
-  		datapower[count] = data[i]['power'];
+      diffWater = data[i]['waterproduced'] - data[i-1]['waterproduced'];
+      diffPower = data[i]['power'] - data[i-1]['power'];
+      if(diffWater < 0) diffWater = 0;
+      if(diffPower < 0) diffPower = 0;
+  		datawater[count] = diffWater;
+  		datapower[count] = diffPower;
   		datahumidity[count] = data[i]['humidity'];
   		datatemp[count] = data[i]['temp'];
   		count += 1;
