@@ -281,8 +281,8 @@ const MultiView = props => {
           chartdata["tds"] = date_entries[i]['tds'];
           chartarr[MID.indexOf(date_entries[i]['machineID'])].push(chartdata);
 
-          piChartWater[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['waterproduced'];
-          piChartPower[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['power'];
+          piChartWater[MID.indexOf(date_entries[i]['machineID'])] = date_entries[i]['waterproduced'];
+          piChartPower[MID.indexOf(date_entries[i]['machineID'])] = date_entries[i]['power'];
         }
       }
       else{
@@ -295,16 +295,16 @@ const MultiView = props => {
 
         for(i = 0; i < date_entries.length; i++){
           var target_index = MID.indexOf(date_entries[i]['machineID']);
-          total_power[target_index] += date_entries[i]['power'];
-          total_water[target_index] += date_entries[i]['waterproduced'];
+          total_power[target_index] = date_entries[i]['power'];
+          total_water[target_index] = date_entries[i]['waterproduced'];
           total_humidity[target_index] += date_entries[i]['humidity'];
           total_temp[target_index] += date_entries[i]['temp'];
           total_tds[target_index] += date_entries[i]['tds'];
           data_num[target_index] += 1;
-          piChartWater[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['waterproduced'];
-          piChartPower[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['power'];
-        }     
-        for(i = 0; i < MID.length; i++){
+        } 
+        for(i = 0; i < MID.length; i++){ 
+          piChartWater[i] += total_water[i];
+          piChartPower[i] += total_power[i];
           chartdata = {};
           chartdata["date"] = days[j].toString();
           chartdata["powerConsumption"] = total_power[i];

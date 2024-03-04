@@ -276,8 +276,8 @@ const SingleView = props => {
             chartdata["tds"] = date_entries[i]['tds'];
             chartarr.push(chartdata);
 
-            displayPower += date_entries[i]['power'];
-            displayWater += date_entries[i]['waterproduced'];
+            displayPower =date_entries[i]['power'];
+            displayWater = date_entries[i]['waterproduced'];
             displayHumidity += date_entries[i]['humidity'];
             displayTemp += date_entries[i]['temp'];
             displayTDS += date_entries[i]['tds'];
@@ -288,21 +288,21 @@ const SingleView = props => {
       else{
         for(i = 0; i < date_entries.length; i++){
           if(date_entries[i]['machineID'] === target){
-            total_power += date_entries[i]['power'];
-            total_water += date_entries[i]['waterproduced'];
+            total_power = date_entries[i]['power'];
+            total_water = date_entries[i]['waterproduced'];
             total_humidity += date_entries[i]['humidity'];
             total_temp += date_entries[i]['temp'];
             total_tds += date_entries[i]['tds'];
             data_num += 1;
-
-            displayPower += date_entries[i]['power'];
-            displayWater += date_entries[i]['waterproduced'];
+            
             displayHumidity += date_entries[i]['humidity'];
             displayTemp += date_entries[i]['temp'];
             displayTDS += date_entries[i]['tds'];
             displayCount += 1;
           }
         }      
+        displayPower += total_power;
+        displayWater += total_water;
         chartdata = {};
         chartdata["date"] = days[j].toString();
         chartdata["powerConsumption"] = total_power;

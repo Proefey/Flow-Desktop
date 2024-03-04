@@ -31,8 +31,8 @@ const Predictor = props => {
 
   useEffect(() => {
       function fetchData() {
-          //const promise = fetch(Backend_URL + `/data/` + target, {
-          const promise = fetch(Backend_URL + `/data/multi/` + MIDLink , {
+          const promise = fetch(Backend_URL + `/data/` + target, {
+          //const promise = fetch(Backend_URL + `/data/multi/` + MIDLink , {
               headers: addHeader()
           });
           return promise;
@@ -189,6 +189,8 @@ const Predictor = props => {
   var datahumidity = [];
   var datatemp = [];
   var count = 0;
+  //var previousWater = 0;
+  //var previousPower = 0;
   for(var i = 0; i < data.length; i++){
   	if(data[i]['machineID'] === target){
   		datawater[count] = data[i]['waterproduced'];
