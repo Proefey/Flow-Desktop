@@ -6,15 +6,21 @@ import Colors from "../Const/Colors";
 import PiChart from "../PiChartComp/PiChart";
 
 const MultiView = props => {
+  //Target is determined by what you select in Taskbar
   const target = props.Target;
+  //Used for authentication
   const addHeader = props.addHeader;
+  //Machine IDs registered with the user
   const MID = props.MID;
+  //Another name for Machine Names registered with the user
   const options = props.options;
 
+  //Creates the MIDLink, which is used in getting data from multiple machine IDs from the backend
   if(Array.isArray(MID) && MID.length !== 0){
     var MIDLink = MID.join('-');
   }
 
+  //Increases the month (Or decreases if left is negative)
   function IncreaseMonth(left) {
     var datearr = [];
     var i = 0;
@@ -26,7 +32,7 @@ const MultiView = props => {
     setDate(new Date(year, month + left, 1));
   }
 
-  //Increases (And decreases) the week
+  //Increases the week (Or decreases if left is negative)
   function IncreaseWeek(left) {
     var datearr = new Array(7);
     datearr[0] = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7 * left);
@@ -37,6 +43,7 @@ const MultiView = props => {
     setDate(new Date(year, month, dayDate + 7 * left));
   }
 
+  //Increases the day (Or decreases if left is negative)
   function IncreaseDay(left){
     var datearr = new Array(1);
     datearr[0] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + left);
@@ -44,6 +51,7 @@ const MultiView = props => {
     setDate(new Date(year, month, dayDate + left));
   }
 
+  //Changes the data based on what timeframe you have selected
   function handleDateChange(left, timeframe){
     switch(timeframe){
       case 0:
@@ -63,6 +71,7 @@ const MultiView = props => {
     }
   }
 
+  //Displays current timeframe you have selected
   function displayState(){
     switch(timeframe){
       case 0:
@@ -76,6 +85,7 @@ const MultiView = props => {
     }
   }
 
+  //For printing the first date of the timeframe
   function displayBeginDate(){
     if(days.length > 0){
       return days[0].toLocaleDateString();
@@ -83,6 +93,7 @@ const MultiView = props => {
     else return "";
   }
 
+  //For printing the last date of the timeframe
   function displayEndDate(){
     if(days.length > 0){
       return days[days.length - 1].toLocaleDateString();
@@ -90,7 +101,7 @@ const MultiView = props => {
     else return "";
   }
 
-
+  //Fills up an array with all dates in the timeframe
   function generateDateArray(start, end){
     const datearr = [];
     let currentDate = start;
@@ -102,6 +113,7 @@ const MultiView = props => {
     setDays(datearr);
   }
 
+  //This function separates datapacks by date, creating a 2d array for each day in the timeframe
   function groupDatesByDay() {
     // Create an object to store dates grouped by day
     const groupedDates = {};
@@ -156,6 +168,7 @@ const MultiView = props => {
     }
   };
 
+  //Deals with custom date inputs
   const handleDateInput = () => {
       // Prompt the user for the start date
       const startDateInput = window.prompt('Enter the start date (YYYY-MM-DD):');
@@ -182,6 +195,7 @@ const MultiView = props => {
       return;
     };
 
+  //Fetches data relating to all registered machines
   useEffect(() => {
       function fetchData() {
           //const promise = fetch(Backend_URL + `/data/` + target, {
@@ -218,7 +232,9 @@ const MultiView = props => {
 
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
+  //Name to dispaly on the y-axis of the chart
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
+  //Soft Maximums Used In Chart, Index indicates which field the maximum relates to
   const highest = [1, 1, 100, 130, 1000];
   var chartColors = ['red', '#FF33FF', 'cyan', '#68eb38', '#00B3E6', 
       '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -259,19 +275,16 @@ const MultiView = props => {
     chartarr[i] = [];
   }
   var DateArray2d = groupDatesByDay();
+  //Parse through data
   if(data != null && days != null){
     for(var j = 0; j < days.length; j++){
       const index = findIndexByDate(DateArray2d, days[j]);
       if(index < 0) continue;
       const date_entries = DateArray2d[index];
+      //Day timeframe treated differently as it includes all datapacks as is
       if(timeframe === 0){
-        var data_num = 0;
-        var total_power = 0;
-        var total_water = 0;
-        var total_humidity = 0;
-        var total_temp = 0;
-        var total_tds = 0;
         for(i = 0; i < date_entries.length; i++){
+          //Creates JSON object passed to chart
           var chartdata = {};
           chartdata["date"] = date_entries[i]['timestamp'].toString();
           chartdata["powerConsumption"] = date_entries[i]['power'];
@@ -280,18 +293,21 @@ const MultiView = props => {
           chartdata["temp"] = date_entries[i]['temp'];
           chartdata["tds"] = date_entries[i]['tds'];
           chartarr[MID.indexOf(date_entries[i]['machineID'])].push(chartdata);
-
+          //Fills out data to be passed to PI Chart
           piChartWater[MID.indexOf(date_entries[i]['machineID'])] = date_entries[i]['waterproduced'];
           piChartPower[MID.indexOf(date_entries[i]['machineID'])] = date_entries[i]['power'];
         }
       }
+      //Other timeframes only take the last packet's value of water production and power consumption
+      //Other timeframes average TDS, Humidity, and Temp across each day
       else{
-        data_num = new Array(MID.length).fill(0);
-        total_power = new Array(MID.length).fill(0);
-        total_water = new Array(MID.length).fill(0);
-        total_humidity = new Array(MID.length).fill(0);
-        total_temp = new Array(MID.length).fill(0);
-        total_tds = new Array(MID.length).fill(0);
+        //These variables used by the dials
+        var data_num = new Array(MID.length).fill(0);
+        var total_power = new Array(MID.length).fill(0);
+        var total_water = new Array(MID.length).fill(0);
+        var total_humidity = new Array(MID.length).fill(0);
+        var total_temp = new Array(MID.length).fill(0);
+        var total_tds = new Array(MID.length).fill(0);
 
         for(i = 0; i < date_entries.length; i++){
           var target_index = MID.indexOf(date_entries[i]['machineID']);
@@ -325,13 +341,14 @@ const MultiView = props => {
     }
   }
   var newarray = [];
+  //Push data to charts
   for(i = 0; i < MID.length; i++){
     var newdata = {};
     newdata["key"] = options[i];
     newdata["data"] = chartarr[i];
     newarray.push(newdata);
   }
-
+  //Push data to PiChart
   for (i = 0; i < MID.length; i++){
     chartdata = {};
     var chartdata2 = {};
@@ -354,6 +371,7 @@ const MultiView = props => {
         position: 'absolute', 
         transform: `translate(${0}vw, ${10}vh)`
       }}>
+      {/*Render Pi Charts*/}
         <PiChart
         data = {waterChart}
         cw = {400}
@@ -376,6 +394,7 @@ const MultiView = props => {
         />
       </div> 
       
+      {/*Render Chart*/}
       <div style = {{
         position: 'absolute', 
         transform: `translate(${20}vw, ${15}vh)`
@@ -391,6 +410,7 @@ const MultiView = props => {
         }
       </div>
 
+    {/*Render Bottom Taskbar*/}
       <div style ={{
         position: 'absolute',
         transform: `translate(${0}vw, ${93}vh)`,
@@ -456,6 +476,7 @@ const MultiView = props => {
         </p>
       </div>
 
+    {/*Render Buttons*/}
       <button 
       onClick = {() => {handleDateChange(0, 0)}}
       style = {{
@@ -568,6 +589,7 @@ const MultiView = props => {
       </p>
       </button>
 
+      {/*Render field buttons underneathe the timeframe buttons*/}
       {[0, 1, 2, 3, 4].map((buttonNumber) => (
         <button
           key={buttonNumber}
@@ -585,6 +607,7 @@ const MultiView = props => {
         </button>
       ))}
 
+    {/*Render Select Dates Button*/}
       <button 
         style = {{
           position: 'absolute', 

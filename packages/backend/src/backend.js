@@ -3,10 +3,13 @@ import Services from "./services.js";
 import cors from 'cors';
 import { registerUser, loginUser, authenticateUser } from "./authorize.js";
 
+//Constants
 const app = express();
+//Port Number
 const port = 8080;
 const APP_VERSION = "1.0.0";
 
+//Set Cors Options
 var corsOptions = {
     origin:'*', 
    credentials:true,            //access-control-allow-credentials:true
@@ -16,9 +19,14 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+//Login is treated in Authorize.js
+//Note the lack of authenticateUser, which is intentional as by this point the user
+//Has not logged in yet and thus does not have any authentication
 app.post("/login", loginUser);
+//Signup is treated in Authorize.js
 app.post("/signup", registerUser);
 
+//Return a list of users
 app.get("/users", authenticateUser, (req, res) => {
     const name = req.query.name;
     Services.getUsers(name)
@@ -31,6 +39,7 @@ app.get("/users", authenticateUser, (req, res) => {
         });
 });
 
+//Return a list of users based on ID
 app.get("/users/:id", authenticateUser, (req, res) => {
     const id = req.params.id;
     Services.getUserById(id)
@@ -47,6 +56,7 @@ app.get("/users/:id", authenticateUser, (req, res) => {
         });
 });
 
+//Add a machine with name MNAME and ID MID to user with UID
 app.put("/users/:id/:MNAME/:MID", authenticateUser, (req, res) => {
     const UID = req.params.id;
     const MNAME = req.params.MNAME;
@@ -60,6 +70,7 @@ app.put("/users/:id/:MNAME/:MID", authenticateUser, (req, res) => {
         });
 });
 
+//Add a user
 app.post("/users", authenticateUser, (req, res) => {
     let userToAdd = req.body;
     Services.instantiateUser(userToAdd)
@@ -71,6 +82,7 @@ app.post("/users", authenticateUser, (req, res) => {
         });
 });
 
+//Delete a machine
 app.delete("/users/:id/:MNAME/:MID", authenticateUser, (req, res) => {
     const UID = req.params.id;
     const MNAME = req.params.MNAME;
@@ -84,7 +96,7 @@ app.delete("/users/:id/:MNAME/:MID", authenticateUser, (req, res) => {
         });
 });
 
-
+//Get Data from one machine based on ID
 app.get("/data/:id", authenticateUser, (req, res) => {
     const MID = req.params.id;
     Services.getData(MID)
@@ -97,6 +109,7 @@ app.get("/data/:id", authenticateUser, (req, res) => {
         });
 });
 
+//Get Data from many machines, ids split by "-"
 app.get("/data/multi/:ids", authenticateUser, (req, res) => {
     const MIDs = req.params.ids;
     var myArray = MIDs.split("-");
@@ -111,6 +124,7 @@ app.get("/data/multi/:ids", authenticateUser, (req, res) => {
         });
 });
 
+//This is only used if you try to directly access backend
 app.get("/", (req, res) => {
     const MID = 2;
     Services.getData(MID)

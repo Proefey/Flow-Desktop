@@ -6,14 +6,19 @@ import Triangle from "@react-native-toolkit/triangle";
 import Colors from "../Const/Colors";
 
 const SingleView = props => {
+  //Target is determined by what you select in Taskbar
   const target = props.Target;
+  //Used for authentication
   const addHeader = props.addHeader;
+  //Machine IDs registered with the user
   const MID = props.MID;
 
+  //Creates the MIDLink, which is used in getting data from multiple machine IDs from the backend
   if(Array.isArray(MID) && MID.length !== 0){
     var MIDLink = MID.join('-');
   }
 
+  //Increases the month (Or decreases if left is negative)
   function IncreaseMonth(left) {
     var datearr = [];
     var i = 0;
@@ -25,7 +30,7 @@ const SingleView = props => {
     setDate(new Date(year, month + left, 1));
   }
 
-  //Increases (And decreases) the week
+  //Increases the week (Or decreases if left is negative)
   function IncreaseWeek(left) {
     var datearr = new Array(7);
     datearr[0] = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7 * left);
@@ -36,6 +41,7 @@ const SingleView = props => {
     setDate(new Date(year, month, dayDate + 7 * left));
   }
 
+  //Increases the day (Or decreases if left is negative)
   function IncreaseDay(left){
     var datearr = new Array(1);
     datearr[0] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + left);
@@ -43,6 +49,7 @@ const SingleView = props => {
     setDate(new Date(year, month, dayDate + left));
   }
 
+  //Changes the data based on what timeframe you have selected
   function handleDateChange(left, timeframe){
     switch(timeframe){
       case 0:
@@ -62,6 +69,7 @@ const SingleView = props => {
     }
   }
 
+  //Displays current timeframe you have selected
   function displayState(){
     switch(timeframe){
       case 0:
@@ -75,6 +83,7 @@ const SingleView = props => {
     }
   }
 
+  //For printing the first date of the timeframe
   function displayBeginDate(){
     if(days.length > 0){
       return days[0].toLocaleDateString();
@@ -82,6 +91,7 @@ const SingleView = props => {
     else return "";
   }
 
+  //For printing the last date of the timeframe
   function displayEndDate(){
     if(days.length > 0){
       return days[days.length - 1].toLocaleDateString();
@@ -89,7 +99,7 @@ const SingleView = props => {
     else return "";
   }
 
-
+  //Fills up an array with all dates in the timeframe
   function generateDateArray(start, end){
     const datearr = [];
     let currentDate = start;
@@ -101,6 +111,7 @@ const SingleView = props => {
     setDays(datearr);
   }
 
+  //This function separates datapacks by date, creating a 2d array for each day in the timeframe
   function groupDatesByDay() {
     // Create an object to store dates grouped by day
     const groupedDates = {};
@@ -162,6 +173,7 @@ const SingleView = props => {
     }
   };
 
+  //Deals with custom date inputs
   const handleDateInput = () => {
       // Prompt the user for the start date
       const startDateInput = window.prompt('Enter the start date (YYYY-MM-DD):');
@@ -188,6 +200,7 @@ const SingleView = props => {
       return;
     };
 
+  //Fetches data relating to all registered machines
   useEffect(() => {
       function fetchData() {
           //const promise = fetch(Backend_URL + `/data/` + target, {
@@ -205,6 +218,7 @@ const SingleView = props => {
           });
     }, [target, MID, MIDLink, addHeader]);
 
+  //Consts
   const [data, setData] = useState([]);
 
   //Handle Buttons To Change Chart
@@ -223,7 +237,9 @@ const SingleView = props => {
 
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
+  //Name to dispaly on the y-axis of the chart
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
+  //Soft Maximums Used In Chart, Index indicates which field the maximum relates to
   const highest = [1, 1, 100, 130, 1000];
 
   //Leap Year Calculation
@@ -253,6 +269,7 @@ const SingleView = props => {
   var displayTemp = 0;
   var displayTDS = 0;
   var displayCount = 0;
+   //Parse through data
   if(data != null && days != null){
     for(var j = 0; j < days.length; j++){
       var data_num = 0;
@@ -264,8 +281,10 @@ const SingleView = props => {
       const index = findIndexByDate(DateArray2d, days[j]);
       if(index < 0) continue;
       const date_entries = DateArray2d[index];
+       //Day timeframe treated differently as it includes all datapacks as is
       if(timeframe === 0){
         for(var i = 0; i < date_entries.length; i++){
+          //Creates JSON object passed to chart
           if(date_entries[i]['machineID'] === target){
             var chartdata = {};
             chartdata["date"] = date_entries[i]['timestamp'].toString();
@@ -275,7 +294,7 @@ const SingleView = props => {
             chartdata["temp"] = date_entries[i]['temp'];
             chartdata["tds"] = date_entries[i]['tds'];
             chartarr.push(chartdata);
-
+            //For use in the dials
             displayPower =date_entries[i]['power'];
             displayWater = date_entries[i]['waterproduced'];
             displayHumidity += date_entries[i]['humidity'];
@@ -285,9 +304,12 @@ const SingleView = props => {
           }
         }
       }
+      //Other timeframes only take the last packet's value of water production and power consumption
+      //Other timeframes average TDS, Humidity, and Temp across each day
       else{
         for(i = 0; i < date_entries.length; i++){
           if(date_entries[i]['machineID'] === target){
+            //For use in aggregation
             total_power = date_entries[i]['power'];
             total_water = date_entries[i]['waterproduced'];
             total_humidity += date_entries[i]['humidity'];
@@ -295,6 +317,7 @@ const SingleView = props => {
             total_tds += date_entries[i]['tds'];
             data_num += 1;
             
+            //For use in dials
             displayHumidity += date_entries[i]['humidity'];
             displayTemp += date_entries[i]['temp'];
             displayTDS += date_entries[i]['tds'];
@@ -303,6 +326,7 @@ const SingleView = props => {
         }      
         displayPower += total_power;
         displayWater += total_water;
+        //Push data to chart
         chartdata = {};
         chartdata["date"] = days[j].toString();
         chartdata["powerConsumption"] = total_power;
@@ -325,6 +349,7 @@ const SingleView = props => {
         position: 'absolute', 
         transform: `translate(${0}vw, ${10}vh)`
       }}>
+      {/*Render Chart*/}
         <Chart
         data = {chartarr}
         front = {false}
@@ -339,6 +364,7 @@ const SingleView = props => {
         />
       </div>
 
+      {/*Render Water Production Dial*/}
       <div 
       style = {{
         position: 'absolute',
@@ -355,6 +381,7 @@ const SingleView = props => {
           />      
       </div>
 
+    {/*Render Power Consumption Dial*/}
       <div 
       style = {{
         position: 'absolute',
@@ -371,6 +398,7 @@ const SingleView = props => {
           />       
       </div>
 
+      {/*Render Humidity Dial*/}
       <div 
       style = {{
         position: 'absolute',
@@ -387,6 +415,7 @@ const SingleView = props => {
           />       
       </div>
 
+      {/*Render Ambient Temperature Dial*/}
       <div 
       style = {{
         position: 'absolute',
@@ -403,6 +432,7 @@ const SingleView = props => {
           />       
       </div>
 
+    {/*Render TDS Dial*/}
       <div 
       style = {{
         position: 'absolute',
@@ -418,7 +448,7 @@ const SingleView = props => {
             errorThreshold={0.05}
           />       
       </div>
-
+    {/*Render Bottom Taskbar*/}
       <div style ={{
         position: 'absolute',
         transform: `translate(${0}vw, ${93}vh)`,
@@ -484,6 +514,7 @@ const SingleView = props => {
         </p>
       </div>
 
+      {/*Render Buttons*/}
       <button 
       onClick = {() => {handleDateChange(0, 0)}}
       style = {{
@@ -596,6 +627,7 @@ const SingleView = props => {
       </p>
       </button>
 
+    {/*Render field buttons underneathe the timeframe buttons*/}
       {[0, 1, 2, 3, 4].map((buttonNumber) => (
         <button
           key={buttonNumber}
@@ -613,6 +645,7 @@ const SingleView = props => {
         </button>
       ))}
 
+      {/*Render Select Dates Button*/}
       <button 
         style = {{
           position: 'absolute', 

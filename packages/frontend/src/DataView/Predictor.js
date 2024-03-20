@@ -6,12 +6,18 @@ import Chart from "../ChartComp/Chart";
 import Dial from "../DialComp/Dial";
 
 const Predictor = props => {
+  //Target is determined by what you select in Taskbar
   const target = props.Target;
+  //Used for authentication
   const addHeader = props.addHeader;
+  //Machine IDs registered with the user
   const MID = props.MID;
+
+  //Creates the MIDLink, which is used in getting data from multiple machine IDs from the backend
   if(Array.isArray(MID) && MID.length !== 0){
     var MIDLink = MID.join('-');
   }
+
   //Const Chart Variables
   const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
@@ -27,8 +33,7 @@ const Predictor = props => {
  const [manualLatitude, setManualLatitude] = useState('');
  const [manualLongitude, setManualLongitude] = useState('');
 
-
-
+ //Fetches data relating to all registered machines
   useEffect(() => {
       function fetchData() {
           const promise = fetch(Backend_URL + `/data/` + target, {
@@ -46,7 +51,7 @@ const Predictor = props => {
           });
     }, [target, MID, MIDLink, addHeader]);
 
-
+  //Gets current user's coordinates using navigator
   function getUserCoordinates () {
    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -66,6 +71,7 @@ const Predictor = props => {
     }
   };
 
+  //Checks to see if user has overwritten the coordinates
   const checkUserCoordinates = useCallback(() => {
     if (manualLatitude && manualLongitude) {
       setUserCoordinates({ latitude: parseFloat(manualLatitude), longitude: parseFloat(manualLongitude) });
@@ -80,7 +86,7 @@ const Predictor = props => {
     setManualLongitude('');
   };
 
-
+  //Calculate a correlation amongst two arrays
   function calculateCorrelation(arrayX, arrayY) {
 	  // Check if arrays are of equal length
 	  if (arrayX.length !== arrayY.length) {
@@ -108,6 +114,7 @@ const Predictor = props => {
 	  return correlation;
   }
 
+  //Standard Deviation Function
 	function standardDeviation(values) {
 	  const mean = values.reduce((acc, val) => acc + val, 0) / values.length;
 	  const squaredDifferences = values.map(val => Math.pow(val - mean, 2));
@@ -115,6 +122,7 @@ const Predictor = props => {
 	  return Math.sqrt(variance);
 	}
 
+  //Predict a new array based on two previous arrays
 	function predictValues(arrayX, arrayY, newX) {
 	  const correlationCoefficient = calculateCorrelation(arrayX, arrayY);
 	  // Calculate the slope and intercept for the linear regression line
@@ -127,11 +135,13 @@ const Predictor = props => {
 	  return predictedValues;
 	}
 
+  //Get data from link
   function fetchWeatherData(link){
     const promise = fetch(link);
     return promise;
   }
 
+  //This function separates datapacks by date, creating a 2d array for each day in the timeframe
   function groupDatesByDay() {
     // Create an object to store dates grouped by day
     const groupedDates = {};
@@ -162,6 +172,7 @@ const Predictor = props => {
   	checkUserCoordinates();
   }, [checkUserCoordinates]);
 
+  //Get data from NWS based on coordinates
   useEffect(() => {
     function fetchWeather(link){
     fetchWeatherData(link)
@@ -191,6 +202,7 @@ const Predictor = props => {
   var count = 0;
   var diffWater = 0;
   var diffPower = 0;
+  //Prepare data for the correlation function
   for(var i = 1; i < data.length; i++){
   	if(data[i]['machineID'] === target){
       diffWater = data[i]['waterproduced'] - data[i-1]['waterproduced'];
@@ -209,20 +221,24 @@ const Predictor = props => {
   var futuretimes = [];
   var total_power = 0;
   var total_water = 0;
+  //Prepare future data for correlation function
   for(i = 0; i < hourlyData.length; i++){
 	futuretimes[i] = hourlyData[i]["startTime"];
 	futurehumidity[i] = hourlyData[i]["relativeHumidity"]["value"];
 	futuretemp[i] = hourlyData[i]["temperature"];
   }
+  //Use humidity as the basis of the correlation
   if(select2 === 2){
 	var futurewater = predictValues(datahumidity, datawater, futurehumidity);
 	var futurepower = predictValues(datahumidity, datapower, futurehumidity);
   }
+  //Use temperature as the basis of the correlation
   else{
   futurewater = predictValues(datatemp, datawater, futuretemp);
 	futurepower = predictValues(datatemp, datapower, futuretemp);
   }
-  var DateArray2d = groupDatesByDay()
+  var DateArray2d = groupDatesByDay();
+  //Display prediction in 30 Minute Intervals
   if(timeframe === 0){
 	  for(i = 0; i < futurehumidity.length; i++){
 	  	var chartdata = {};
@@ -234,6 +250,7 @@ const Predictor = props => {
 	    chartarr.push(chartdata);
 	  }
   }
+  //Display prediction in Half Day Intervals
   else{
   	count = 0;
   	for(i = 0; i < DateArray2d.length; i++){
@@ -271,6 +288,7 @@ const Predictor = props => {
         position: 'absolute', 
         transform: `translate(${0}vw, ${10}vh)`
       }}>
+    {/*Render Chart*/}
         <Chart
         data = {chartarr}
         front = {false}
@@ -285,6 +303,7 @@ const Predictor = props => {
         />
       </div>
 
+    {/*Render Predicted Water Dial*/}
       <div 
       style = {{
         position: 'absolute',
@@ -301,6 +320,7 @@ const Predictor = props => {
           />      
       </div>
 
+      {/*Render Predicted Power Dial*/}
       <div 
       style = {{
         position: 'absolute',
@@ -317,6 +337,7 @@ const Predictor = props => {
           />      
       </div>
 
+    {/*Render Bottom Taskbar*/}
       <div style ={{
         position: 'absolute',
         transform: `translate(${0}vw, ${93}vh)`,
@@ -379,6 +400,7 @@ const Predictor = props => {
         </p>
       </div>
 
+    {/*Render Hour Forecast Button*/}
       <button 
       onClick = {() => {setTimeframe(0)}}
       style = {{
@@ -402,6 +424,7 @@ const Predictor = props => {
       </p>
       </button>
 
+      {/*Render Day Forecast Button*/}
       <button 
       onClick = {() => {setTimeframe(1)}}
       style = {{
@@ -425,6 +448,7 @@ const Predictor = props => {
       </p>
       </button>
 
+      {/*Render Power Cons Button*/}
       <button 
       onClick = {() => {set1(0)}}
       style = {{
@@ -448,6 +472,7 @@ const Predictor = props => {
       </p>
       </button>
 
+    {/*Render Water Prod Button*/}
       <button 
       onClick = {() => {set1(1)}}
       style = {{
@@ -471,6 +496,7 @@ const Predictor = props => {
       </p>
       </button>
 
+      {/*Render Humidity Button*/}
       <button 
       onClick = {() => {set2(2)}}
       style = {{
@@ -494,6 +520,7 @@ const Predictor = props => {
       </p>
       </button>
 
+    {/*Render Temp Button*/}
       <button 
       onClick = {() => {set2(3)}}
       style = {{
@@ -517,6 +544,7 @@ const Predictor = props => {
       </p>
       </button>
 
+    {/*Render Place To Input Coordinates*/}
       <div>
       <label
       	style = {{
@@ -548,6 +576,7 @@ const Predictor = props => {
           onChange={(e) => setManualLongitude(e.target.value)}
         />
       </label>
+    {/*Render Check Coordinates Button*/}
 	  <button 
 	  onClick={checkUserCoordinates}
 	  style = {{
@@ -561,6 +590,7 @@ const Predictor = props => {
       }}
 	  >Check Coordinates</button>
 
+    {/*Render Reset Coordinates Button*/}
       <button 
       onClick={resetToNavigatorCoordinates}
       style = {{
@@ -576,6 +606,7 @@ const Predictor = props => {
       Reset Coordinates
       </button>
 
+    {/*Display Coodiantes*/}
       {userCoordinates ? (
         <p
         style = {{

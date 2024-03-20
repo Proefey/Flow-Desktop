@@ -7,6 +7,7 @@ const MultiLineChart = props => {
   const [visibleLines, setVisibleLines] = useState(data.map((line) => line.key));
   const [allLinesVisible, setAllLinesVisible] = useState(true);
 
+  //An array of colors to use
   const colors = ['red', '#FF33FF', 'cyan', '#68eb38', '#00B3E6', 
       '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
       '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
@@ -18,6 +19,7 @@ const MultiLineChart = props => {
       '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
       '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
 
+  //Removes a line from the graph, Note: Doesn't work at the moment
   const handleLineClick = (key) => {
     if (allLinesVisible && visibleLines.length > 1) {
       const updatedVisibleLines = visibleLines.filter(line => line !== key);
@@ -25,6 +27,7 @@ const MultiLineChart = props => {
     }
   };
 
+  //Removes a line from the graph
   const handleRemoveLine = (key) => {
     if (visibleLines.length > 1) {
       const updatedVisibleLines = visibleLines.filter(line => line !== key);
@@ -32,6 +35,7 @@ const MultiLineChart = props => {
     }
   };
 
+  //Undos all line removals
   const handleResetClick = () => {
     setVisibleLines(data.map((line) => line.key));
     setAllLinesVisible(true);
@@ -39,6 +43,7 @@ const MultiLineChart = props => {
 
   return (
     <div>
+        {/*Creates Chart*/}
         <LineChart 
         width={props.width} 
         height={props.height} 
@@ -71,6 +76,7 @@ const MultiLineChart = props => {
           transform: `translate(${3}vw, ${0}vh)`,
         }}
       >
+      {/*Renders Buttons For MultiLineChart*/}
         {data.map((line, index) => ( visibleLines.includes(line.key) &&
           <button 
           key={line.key} 

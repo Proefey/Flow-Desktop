@@ -4,6 +4,7 @@ import Dial from "../DialComp/Dial";
 
 const MachineState = props => {
   
+  //Returns the difference between the timestamp and the current time
   function calculateTimeDifference(timestamp) {
     const currentDate = new Date();
     const startDate = new Date(timestamp);
@@ -62,6 +63,7 @@ const MachineState = props => {
       </p>
       </div>
 
+      {/*Render Dials*/}
       <div 
       style = {{
         position: 'absolute',

@@ -10,6 +10,7 @@ import Colors from "../Const/Colors"
 import {Backend_URL} from "../Const/Urls";
 
 function SignupForm(props) {
+    //User JSON object that will be sent to backend
     const [user, setUser] = useState({
         username: "",
         pwd: "",
@@ -19,6 +20,7 @@ function SignupForm(props) {
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
+    //Updates formData
     function handleChange(event) {
         const { name, value } = event.target;
         setUser((prevUser) => ({
@@ -27,6 +29,7 @@ function SignupForm(props) {
         }));
     }
 
+    //Validate Input and Send to Backend
     const submitForm = async () => {
         if (!user.username || !user.pwd) {
             setErrorMessage("Please enter both username and password");

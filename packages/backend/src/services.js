@@ -8,7 +8,7 @@ dotenv.config();
 mongoose.set("debug", true);
 
 mongoose
-    .connect("mongodb+srv://Proefey:0UPYpvGmo21iyI5l@teamflow.u4jpeoh.mongodb.net/TeamFlow?retryWrites=true&w=majority", {
+    .connect(process.env.MONGODB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
@@ -41,12 +41,14 @@ function deleteUserById(id) {
     return userModel.findByIdAndDelete(id);
 }
 
+/* Create New User */
 async function instantiateUser(user) {
     const newUser = new userModel(user);
     const promise = newUser.save();
     return promise;
 }
 
+/* Adds Machine To User*/
 function editUser(UID, MID, MName) {
     const promise = userModel.updateOne(
         { _id: UID},
@@ -60,6 +62,7 @@ function editUser(UID, MID, MName) {
     return promise;
 }
 
+/* Deletes Machine From User */
 function deleteMachine(UID, MID, MName){
     const promise = userModel.updateOne(
         { _id: UID},
@@ -73,6 +76,7 @@ function deleteMachine(UID, MID, MName){
     return promise;
 }
 
+/* Gets Data from One ID*/
 function getData(id){
     let promise;
     if(id){
@@ -83,6 +87,7 @@ function getData(id){
     return promise;
 }
 
+/* Gets Data From Multiple IDs */
 function getMultiData(ids){
     let promise;
     if(ids){
@@ -91,13 +96,6 @@ function getMultiData(ids){
         promise = dataPackModel.find();
     }
     return promise;
-}
-
-/*Helper Function For addData*/
-function sameDay(d1, d2) {
-  return d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
 }
 
 

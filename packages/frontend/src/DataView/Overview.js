@@ -6,15 +6,21 @@ import PiChart from "../PiChartComp/PiChart";
 import MachineState from "../MachineStateComp/MachineState";
 
 const Overview = props => {
+  //Target is determined by what you select in Taskbar
   const target = props.Target;
+  //Used for authentication
   const addHeader = props.addHeader;
+  //Machine IDs registered with the user
   const MID = props.MID;
+  //Another name for Machine Names registered with the user
   const options = props.options;
 
+  //Creates the MIDLink, which is used in getting data from multiple machine IDs from the backend
   if(Array.isArray(MID) && MID.length !== 0){
     var MIDLink = MID.join('-');
   }
 
+  //Increases the month (Or decreases if left is negative)
   function IncreaseMonth(left) {
     var datearr = [];
     var i = 0;
@@ -26,7 +32,7 @@ const Overview = props => {
     setDate(new Date(year, month + left, 1));
   }
 
-  //Increases (And decreases) the week
+  //Increases the week (Or decreases if left is negative)
   function IncreaseWeek(left) {
     var datearr = new Array(7);
     datearr[0] = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7 * left);
@@ -37,6 +43,7 @@ const Overview = props => {
     setDate(new Date(year, month, dayDate + 7 * left));
   }
 
+  //Increases the day (Or decreases if left is negative)
   function IncreaseDay(left){
     var datearr = new Array(1);
     datearr[0] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + left);
@@ -44,6 +51,7 @@ const Overview = props => {
     setDate(new Date(year, month, dayDate + left));
   }
 
+  //Changes the data based on what timeframe you have selected
   function handleDateChange(left, timeframe){
     switch(timeframe){
       case 0:
@@ -63,6 +71,7 @@ const Overview = props => {
     }
   }
 
+  //Displays current timeframe you have selected
   function displayState(){
     switch(timeframe){
       case 0:
@@ -76,6 +85,7 @@ const Overview = props => {
     }
   }
 
+  //For printing the first date of the timeframe
   function displayBeginDate(){
     if(days.length > 0){
       return days[0].toLocaleDateString();
@@ -83,6 +93,7 @@ const Overview = props => {
     else return "";
   }
 
+  //For printing the last date of the timeframe
   function displayEndDate(){
     if(days.length > 0){
       return days[days.length - 1].toLocaleDateString();
@@ -90,7 +101,7 @@ const Overview = props => {
     else return "";
   }
 
-
+  //Fills up an array with all dates in the timeframe
   function generateDateArray(start, end){
     const datearr = [];
     let currentDate = start;
@@ -102,6 +113,7 @@ const Overview = props => {
     setDays(datearr);
   }
 
+  //This function separates datapacks by date, creating a 2d array for each day in the timeframe
   function groupDatesByDay() {
     // Create an object to store dates grouped by day
     const groupedDates = {};
@@ -144,6 +156,7 @@ const Overview = props => {
     return -1;
   }
 
+  //Deals with custom date inputs
   const handleDateInput = () => {
       // Prompt the user for the start date
       const startDateInput = window.prompt('Enter the start date (YYYY-MM-DD):');
@@ -170,11 +183,13 @@ const Overview = props => {
       return;
     };
 
+  //This sorts the data by increasing date
   function sortByDate(jsonList) {
-  // Assuming each JSON object has a 'date' property
-  return jsonList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    // Assuming each JSON object has a 'date' property
+    return jsonList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
   }
 
+  //Fetches data relating to all registered machines, then sorts them by date
   useEffect(() => {
       function fetchData() {
           console.info(MIDLink);
@@ -211,7 +226,6 @@ const Overview = props => {
   var [days, setDays] = useState([new Date()]);
 
   //Const Chart Variables
-  //const dataNames = ["powerConsumption", "waterProduction", "humidity", "temp", "tds"];
   const axisNames = ["Power Consumption (KWH)", "Water Production (L)", "Humidity (%)", "Temp (F)", "TDS (PPM)"];
   var chartColors = ['red', '#FF33FF', 'cyan', '#68eb38', '#00B3E6', 
 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -249,8 +263,10 @@ const Overview = props => {
   var piChartWater = new Array(MID.length).fill(0);
   var piChartPower = new Array(MID.length).fill(0);
 	var DateArray2d = groupDatesByDay();
+  //Parses through the data to fill out Pi Chart & Get Last Packets
 	if(data != null && days != null){
 		for(var x = 0; x < DateArray2d.length; x++){
+      //Find the lastest datapack for each machine
 			for(var y = 0; y < DateArray2d[x].length; y++){
 				var temp_date = new Date(DateArray2d[x][y]['timestamp']);
       	if(temp_date < new Date()) {
@@ -258,16 +274,18 @@ const Overview = props => {
         }
 			}
 		}
+      //Aggregate the water produced and power consumed for all machines for the current time frame
 	    for(var j = 0; j < days.length; j++){
 	    	const index = findIndexByDate(DateArray2d, days[j]);
 	    	if(index < 0) continue;
       		const date_entries = DateArray2d[index];
       		for(var i = 0; i < date_entries.length; i++){
-      			piChartWater[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['waterproduced'];
-      			piChartPower[MID.indexOf(date_entries[i]['machineID'])] += date_entries[i]['power'];
+      			piChartWater[MID.indexOf(date_entries[i]['machineID'])] = date_entries[i]['waterproduced'];
+      			piChartPower[MID.indexOf(date_entries[i]['machineID'])] = date_entries[i]['power'];
       		}	
 	  	}
 	}
+  //Push aggregate data to PI chart components
 	for (i = 0; i < MID.length; i++){
 		numArray[i] = i;
 		var chartdata = {};
@@ -295,6 +313,7 @@ const Overview = props => {
         position: 'absolute', 
         transform: `translate(${0}vw, ${10}vh)`
       }}>
+        {/*Renders the Water PI Chart*/}
         <PiChart
         data = {waterChart}
         cw = {staticwidth/4}
@@ -304,6 +323,7 @@ const Overview = props => {
         />
       </div>
 
+      {/*Renders the Power PI Chart*/}
       <div style = {{
         position: 'absolute', 
         transform: `translate(${0}vw, ${45}vh)`
@@ -317,6 +337,7 @@ const Overview = props => {
         />
       </div> 
 
+      {/*Renders the machineState Components*/}
       {numArray.map( (num) => <MachineState 
         key = {num}
         name = {options[num]}
@@ -328,6 +349,7 @@ const Overview = props => {
 
       />)}
 
+      {/*Renders a bottom rectangle of the bottom taskbar, this is used as the bright blue highlight*/}
       <div style ={{
         position: 'absolute',
         transform: `translate(${0}vw, ${93}vh)`,
@@ -337,6 +359,7 @@ const Overview = props => {
       }}
       />
 
+      {/*Renders the bottom rectangle of the bottom taskbar*/}
       <div style ={{
         position: 'absolute',
         transform: `translate(${0}vw, ${94}vh)`,
@@ -346,6 +369,7 @@ const Overview = props => {
       }}
       />
 
+      {/*Renders the triangle seen on the bottom left*/}
       <div style ={{
           position: 'absolute',
           transform: `translate(${20}vw, ${85}vh)`,
@@ -359,6 +383,7 @@ const Overview = props => {
           />
       </div>
 
+      {/*Renders the triangles seen on the bottom right*/}
       <div style ={{
           position: 'absolute',
           transform: `translate(${75}vw, ${85}vh)`,
@@ -372,6 +397,7 @@ const Overview = props => {
           />
       </div>
 
+    {/*Renders the central rectangle of the bottom taskbar*/}
       <div style ={{
         position: 'absolute',
         transform: `translate(${25}vw, ${85}vh)`,
@@ -390,6 +416,7 @@ const Overview = props => {
         </p>
       </div>
 
+      {/*Renders the text that displays the current timeframe*/}
       <div style ={{
         position: 'absolute',
         transform: `translate(${25}vw, ${85}vh)`,
@@ -411,6 +438,7 @@ const Overview = props => {
         </p>
       </div>
 
+      {/*Renders the Daily Button on the bottom*/}
       <button 
       onClick = {() => {handleDateChange(0, 0)}}
       style = {{
@@ -434,6 +462,7 @@ const Overview = props => {
       </p>
       </button>
 
+    {/*Renders the Weekly Button on the bottom*/}
       <button 
       onClick = {() => {handleDateChange(0, 1)}}
       style = {{
@@ -457,6 +486,7 @@ const Overview = props => {
       </p>
       </button>
 
+      {/*Renders the Monthly Button on the bottom*/}
       <button 
       onClick = {() => {handleDateChange(0, 2)}}
       style = {{
@@ -479,6 +509,7 @@ const Overview = props => {
       </p>
       </button>
 
+      {/*Renders the Decrease Button on the bottom*/}
       <button 
       onClick = {() => {handleDateChange(-1, timeframe)}}
       style = {{
@@ -501,6 +532,7 @@ const Overview = props => {
       </p>
       </button>
 
+      {/*Renders the Increase Button on the bottom*/}
       <button 
       onClick = {() => {handleDateChange(1, timeframe)}}
       style = {{
@@ -523,6 +555,7 @@ const Overview = props => {
       </p>
       </button>
 
+      {/*Renders the Select Dates Button on the bottom*/}
       <button 
         style = {{
           position: 'absolute', 

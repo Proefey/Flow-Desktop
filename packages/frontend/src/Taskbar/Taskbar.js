@@ -11,6 +11,7 @@ const Taskbar = props => {
   const addHeader = props.addHeader;
   const UID = props.UID;
 
+  //Fetches the name of the user to display
   useEffect(() => {
     function fetchUser() {
       const promise = fetch(Backend_URL + `/users/` + UID, {
@@ -29,6 +30,7 @@ const Taskbar = props => {
 
   return(
       <div>
+        {/*Top Taskbar Render*/}
         <div
         style = {{
           transform: `translate(${0}vw, ${1}vh)`,
@@ -92,6 +94,7 @@ const Taskbar = props => {
         </p>
         </div>
 
+        {/*Buttons To Move To Other Pages*/}
         <div>
         <Link to={"/multiview"}>
         <button style = {{
@@ -152,6 +155,7 @@ const Taskbar = props => {
         </Link>
         </div>
 
+        {/*Dropdown Render*/}
         <div>
         <Dropdown 
           changeTarget = {props.changeTarget}

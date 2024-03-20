@@ -17,6 +17,7 @@ function MyApp() {
   const [options, changeOptions] = useState([]);
   const [MID, changeMID] = useState([]);
 
+  //Gives authentication to API requests
   function addAuthHeader(otherHeaders = {}) {
       if (token === INVALID_TOKEN) {
           return otherHeaders;
@@ -28,6 +29,7 @@ function MyApp() {
       }
   }
 
+  //Responsible for top level rendering of each of the pages depending on the url
   return (
     <BrowserRouter>
       <Routes>

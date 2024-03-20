@@ -14,8 +14,10 @@ const Dropdown = (props) => {
   const changeMID = props.changeMID;
 
 
+  //For authentication purposes
   const addHeader = props.addHeader;
   const UID = props.UID;
+  //This is the target machine for both singleview and the predictor
   var target = 0;
 
   function fetchData() {
@@ -25,6 +27,7 @@ const Dropdown = (props) => {
     return promise;
   }; 
 
+  //Fetch the machine names and machine IDs
   useEffect(() => {
     fetchData()
         .then((res) => res.json())
@@ -41,10 +44,12 @@ const Dropdown = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [changeMID, changeOptions]);
 
+  //Allow the user to activate and deactivate the dropdown
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  //Handle a user selecting an option
   function handleOptionSelect(index){
     setIsOpen(false);
     if(isDeleted === false) {
@@ -62,11 +67,12 @@ const Dropdown = (props) => {
 
   const delay = ms => new Promise(res => setTimeout(res, ms));
 
+  //Allow a user to delete a machine from the dropdown
   const handleDeleteOption = async (index) => {
     const DeleteMID = MID[index];
     const DeleteMNAME = options[index];
-    console.info(index);
     try {
+        //Send request to server to delete machine
         await fetch(
         Backend_URL  + `/users/` + props.UID + '/' + DeleteMNAME + '/' + DeleteMID,
           {
@@ -77,6 +83,7 @@ const Dropdown = (props) => {
         setDeleted(true);
         console.info(isDeleted);
 
+        //Refetch the list of machine names and IDs
         fetchData()
         .then((res) => res.json())
         .then((json) => {
@@ -89,6 +96,7 @@ const Dropdown = (props) => {
             console.log(error);
             setOptions(null); // To indicate API call failed
         });
+        //If no more options are left, display MACHINE ID
         if(options.length < 1){
           setDisplayName("Machine ID");
         }

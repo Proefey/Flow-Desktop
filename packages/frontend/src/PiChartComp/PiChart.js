@@ -9,6 +9,7 @@ const PiChart = props => {
   var name = props.name;
   return (
     <div>
+    {/*Render Title*/}
     <div         
     style = {{
       transform: `translate(${0}vw, ${3}vh)`,
@@ -30,6 +31,7 @@ const PiChart = props => {
         {name}
       </p>  
     </div>    
+  {/*Render Pi Chart */}
   <PieChart width={chartwidth} height={chartheight}>
         <Pie
           dataKey="value"

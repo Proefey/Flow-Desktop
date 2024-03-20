@@ -14,16 +14,22 @@ import {
  * Chart, using recharts: recharts.org
  */
 const Chart = props => {
+
+    //Arrays that holds the data
     var dataKeyA = props.a;
-    var nameA = props.aname;
     var dataKeyB = props.b;
+    //Name of the data to display
+    var nameA = props.aname;
     var nameB = props.bname;
+    //Width and height of the chart
     var chartwidth = props.cw;
     var chartheight = props.ch;
+    //The maximum value the data (See Code Documentation)
     var maxA = props.amax;
     var maxB = props.bmax;
     return (
       <div className='Chart'>
+        {/*Creates Chart*/}
         <LineChart 
           width={chartwidth} 
           height={chartheight} 
